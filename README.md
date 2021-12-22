@@ -18,7 +18,7 @@ Daniel Y. M. Nakamura, Paulo D. P. Pinheiro, Moisés D. E. Sulbarán
 
 - S3: dataset including habitat, dominant frequency, male SVL, female SVL, and sexual size dimorphism for 118 species of Cophomantini included in the employed phylogenies. This dataset was used in the phylogenetic comparative analyses. 
 
-- S4: dataset including habitat, dominant frequency, male SVL, female SVL, and sexual size dimorphism for 187 species of Cophomantini. Some species are not included in the employed phylogenies, but we collected their data in order to perform non-phyllogenetic analyses as additional analyses. 
+- S4: dataset including habitat, dominant frequency, male SVL, female SVL, and sexual size dimorphism for 187 species of Cophomantini. Some species are not included in the employed phylogenies, but we collected their data in order to perform non-phyllogenetic statistical models as additional analyses. 
 
 *R code*
 
