@@ -1,0 +1,1967 @@
+---
+title: "Effects of body size, habitat and sexual dimorphism on the evolution of advertisement calls in Cophomantini"
+author: "Daniel Yudi Miyahara Nakamura & Paulo Durães Pereira Pinheiro"
+data: "June 2021"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE)
+```
+
+## 1. Loading Packages
+
+The following packages must be loaded to run the analyses in R.
+
+```{r packages,message=FALSE,echo=T,results='hide'}
+library(ape)
+library(caper)
+library(car)
+library(caret)
+library(dplyr)
+library(gapminder)
+library(geiger)
+library(ggExtra)
+library(ggplot2)
+library(gridExtra)
+library(knitr)
+library(phylolm)
+library(phytools)
+library(picante)
+library(plyr)
+library(reshape2)
+library(tidyverse)
+```
+
+The packages 'car' and 'tidyverse' require the following libraries in Ubuntu: 
+
+$ sudo apt-get install libcurl4-openssl-dev
+$ sudo apt-get install -y libssl-dev
+$ sudo apt-get install libxml2-dev
+
+## 2. Data input and exploration
+
+### 2.1 Traits
+
+Data about sound parameters, habitat and body size were collected through literature search. Note that some variables exhibit missing data (*NA*) for some species (see the complete table in Supplementary Materials 3). Further details might be accessed in Supplementary Material 1, including challenges in the search for some sound parameters, conflicting information about habitat depending on the literature source and potential *Cophomantini* species whose vocalizations have yet to be described.
+
+```{r "Load traits data"}
+# Load matrix
+anura.data <- read.csv("S3.csv",header=TRUE, sep=",",row.names=1)
+# Dataset with DF, SVL, SDI and calling place data
+xx<-anura.data[,c(1,2,3,4,5,6,9,10,14)]
+# Remove missing data 
+xx_na<-xx %>% drop_na(log_DF,log_maleSVL,Calling_place)
+```
+
+##### 2.1.1 Summary metrics for DF
+
+```{r data summery0,echo=F, message=FALSE}
+anura.data.summ <- summarise(group_by(xx_na,Calling_place),meanDF=mean(Dominant_frequency),sdDF=sd(Dominant_frequency), meanSVL=mean(SVL_male),sdSVL=sd(SVL_male))
+kable(anura.data.summ)
+```
+
+```{r datasummary1, message=FALSE,warning=FALSE,echo=FALSE,fig.height=3.5,fig.width=5.5,error=FALSE}
+anura.data.summb <- summarise(group_by(xx_na,Calling_place),meanDF=mean(log_DF),sdDF=sd(log_DF),meanSDI=mean(log_SDI),sdSDI=sd(log_SDI))
+
+#DF:
+g1 <- ggplot(xx,aes(x=log_DF,fill=Calling_place))+
+geom_histogram(alpha=.6,position="identity")+
+geom_vline(data=data.frame(anura.data.summb),aes(xintercept=meanDF,colour=Calling_place),linetype="dashed", size=0.6)+
+xlab("Dominant Frequency (Hz) [log]")+
+theme(legend.position = c(0.9,1.06),
+      legend.background=element_rect("transparent"))
+g1
+```
+
+### 2.2 Phylogeny 
+
+For all analyses, we used species-level Cophomantini trees obtained from Lyra et al. (2020). Originally, phylogenetic inference was performed under two optimality criteria: maximum parsimony and maximum likelihood (to visualize the phylogenetic trees, see Appendix S5 and S6, respectively, in supplementary materials of Lyra et al. 2020). In our macroevolutionary analyses, we also used the phylogenies obtained by these two different methods. However, analyses with a parsimony approach were conducted in Mesquite and TnT. Therefore, the following R code describes phylogenetic comparative analyses using the maximum likelihood tree.
+
+```{r "Load tree data"}
+#Load maximum likelihood tree
+tree<- read.nexus(file = "RAxML_Lyraetal_INPRESS.tre")
+plotTree(tree,node.numbers=T,fsize=0.35)
+
+#Rotate some specific nodes
+tree<-rotate(tree,138)
+tree<-rotate(tree,139)
+tree<-rotate(tree,140)
+tree<-rotate(tree,141)
+tree<-rotate(tree,142)
+tree<-rotate(tree,143)
+tree<-rotate(tree,145)
+tree<-rotate(tree,150)
+tree<-rotate(tree,151)
+tree<-rotate(tree,153)
+tree<-rotate(tree,154)
+tree<-rotate(tree,155)
+tree<-rotate(tree,159)
+tree<-rotate(tree,160)
+tree<-rotate(tree,161)
+tree<-rotate(tree,162)
+tree<-rotate(tree,163)
+tree<-rotate(tree,164)
+tree<-rotate(tree,165)
+tree<-rotate(tree,168)
+tree<-rotate(tree,170)
+tree<-rotate(tree,171)
+tree<-rotate(tree,172)
+tree<-rotate(tree,174)
+tree<-rotate(tree,175)
+tree<-rotate(tree,176)
+tree<-rotate(tree,177)
+tree<-rotate(tree,179)
+tree<-rotate(tree,180)
+tree<-rotate(tree,184)
+tree<-rotate(tree,190)
+tree<-rotate(tree,191)
+tree<-rotate(tree,193)
+tree<-rotate(tree,194)
+tree<-rotate(tree,195)
+tree<-rotate(tree,197)
+tree<-rotate(tree,198)
+tree<-rotate(tree,200)
+tree<-rotate(tree,201)
+tree<-rotate(tree,203)
+tree<-rotate(tree,206)
+tree<-rotate(tree,207)
+tree<-rotate(tree,209)
+tree<-rotate(tree,212)
+tree<-rotate(tree,213)
+tree<-rotate(tree,214)
+tree<-rotate(tree,215)
+tree<-rotate(tree,218)
+tree<-rotate(tree,219)
+tree<-rotate(tree,222)
+tree<-rotate(tree,225)
+tree<-rotate(tree,226)
+tree<-rotate(tree,227)
+tree<-rotate(tree,229)
+tree<-rotate(tree,230)
+tree<-rotate(tree,231)
+tree<-rotate(tree,233)
+tree<-rotate(tree,234)
+tree<-rotate(tree,235)
+tree<-rotate(tree,236)
+tree<-rotate(tree,237)
+tree<-rotate(tree,240)
+tree<-rotate(tree,241)
+tree<-rotate(tree,242)
+tree<-rotate(tree,243)
+tree<-rotate(tree,247)
+tree<-rotate(tree,248)
+tree<-rotate(tree,249)
+tree<-rotate(tree,250)
+tree<-rotate(tree,251)
+tree<-rotate(tree,253)
+tree<-rotate(tree,257)
+tree<-rotate(tree,258)
+tree<-rotate(tree,260)
+tree<-rotate(tree,265)
+tree<-rotate(tree,267)
+tree<-rotate(tree,268)
+tree<-rotate(tree,269)
+tree<-rotate(tree,270)
+
+plotTree(tree,node.numbers=T,fsize=0.35)
+```
+
+```{r "Load parsimony tree"}
+#Load parsimony tree
+parsimony.cophomantini <- read.nexus(file = "parcimonia_com_todas_especies.tree")
+#Rotate nodes
+#parsimony.cophomantini_<-rotate(parsimony.cophomantini,87)
+#plotTree(parsimony.cophomantini_,node.numbers=T,fsize=0.35)
+#Export to use in Mesquite or TnT
+write.nexus(parsimony.cophomantini, file = "p.tree.mesquite.nex")
+```
+
+```{r}
+#Load ultrametric tree from FigTree
+treeultra<- read.newick(file = "RAxML_Lyraetal_INPRESS_ultrametric.tre")
+plotTree(treeultra,node.numbers=T,fsize=0.35)
+
+#Rotate some specific nodes
+treeultra<-rotate(treeultra,138)
+treeultra<-rotate(treeultra,139)
+treeultra<-rotate(treeultra,140)
+treeultra<-rotate(treeultra,141)
+treeultra<-rotate(treeultra,142)
+treeultra<-rotate(treeultra,143)
+treeultra<-rotate(treeultra,145)
+treeultra<-rotate(treeultra,150)
+treeultra<-rotate(treeultra,151)
+treeultra<-rotate(treeultra,153)
+treeultra<-rotate(treeultra,154)
+treeultra<-rotate(treeultra,155)
+treeultra<-rotate(treeultra,159)
+treeultra<-rotate(treeultra,160)
+treeultra<-rotate(treeultra,161)
+treeultra<-rotate(treeultra,162)
+treeultra<-rotate(treeultra,163)
+treeultra<-rotate(treeultra,164)
+treeultra<-rotate(treeultra,165)
+treeultra<-rotate(treeultra,168)
+treeultra<-rotate(treeultra,170)
+treeultra<-rotate(treeultra,171)
+treeultra<-rotate(treeultra,172)
+treeultra<-rotate(treeultra,174)
+treeultra<-rotate(treeultra,175)
+treeultra<-rotate(treeultra,176)
+treeultra<-rotate(treeultra,177)
+treeultra<-rotate(treeultra,179)
+treeultra<-rotate(treeultra,180)
+treeultra<-rotate(treeultra,184)
+treeultra<-rotate(treeultra,190)
+treeultra<-rotate(treeultra,191)
+treeultra<-rotate(treeultra,193)
+treeultra<-rotate(treeultra,194)
+treeultra<-rotate(treeultra,195)
+treeultra<-rotate(treeultra,197)
+treeultra<-rotate(treeultra,198)
+treeultra<-rotate(treeultra,200)
+treeultra<-rotate(treeultra,201)
+treeultra<-rotate(treeultra,203)
+treeultra<-rotate(treeultra,206)
+treeultra<-rotate(treeultra,207)
+treeultra<-rotate(treeultra,209)
+treeultra<-rotate(treeultra,212)
+treeultra<-rotate(treeultra,213)
+treeultra<-rotate(treeultra,214)
+treeultra<-rotate(treeultra,215)
+treeultra<-rotate(treeultra,218)
+treeultra<-rotate(treeultra,219)
+treeultra<-rotate(treeultra,222)
+treeultra<-rotate(treeultra,225)
+treeultra<-rotate(treeultra,226)
+treeultra<-rotate(treeultra,227)
+treeultra<-rotate(treeultra,229)
+treeultra<-rotate(treeultra,230)
+treeultra<-rotate(treeultra,231)
+treeultra<-rotate(treeultra,233)
+treeultra<-rotate(treeultra,234)
+treeultra<-rotate(treeultra,235)
+treeultra<-rotate(treeultra,236)
+treeultra<-rotate(treeultra,237)
+treeultra<-rotate(treeultra,240)
+treeultra<-rotate(treeultra,241)
+treeultra<-rotate(treeultra,242)
+treeultra<-rotate(treeultra,243)
+treeultra<-rotate(treeultra,247)
+treeultra<-rotate(treeultra,248)
+treeultra<-rotate(treeultra,249)
+treeultra<-rotate(treeultra,250)
+treeultra<-rotate(treeultra,251)
+treeultra<-rotate(treeultra,253)
+treeultra<-rotate(treeultra,257)
+treeultra<-rotate(treeultra,258)
+treeultra<-rotate(treeultra,260)
+treeultra<-rotate(treeultra,265)
+treeultra<-rotate(treeultra,267)
+treeultra<-rotate(treeultra,268)
+treeultra<-rotate(treeultra,269)
+treeultra<-rotate(treeultra,270)
+
+plotTree(treeultra,node.numbers=T,fsize=0.35)
+```
+
+#### 2.2.1 Phylogenetic signal
+
+We will perform two different tests of phylogenetic signals for continuous variables (i.e., DF, SDI, male and female body size). First, **Blomberg’s K**, which compares the variance of PICs to what we would expect under a Brownian motion model (Blomberg et al. 2003; Revell 2018). 
+
+- K = 1 means that relatives resemble one another as much as we should expect under BM
+- K < 1 means that there is less “phylogenetic signal” than expected under BM 
+- K > 1 means that there is more "phylogenetic signal" than expected under BM
+
+A significant p-value returned from phylosig tells you that there is significant phylogenetic signal - that is, close relatives are more similar than random pairs of species.
+
+```{r "blomberg's k",message=FALSE,warning=FALSE}
+#Calculate K for male SVL
+anura.data23male<-anura.data[,c(1,3)]
+anura.data23male <-anura.data23male %>% drop_na(log_maleSVL)
+male.svl23<-setNames(anura.data23male$log_maleSVL,rownames(anura.data23male))
+k.male.svl23<-phylosig(tree,male.svl23,test=TRUE)
+k.male.svl23
+
+#Calculate K for female SVL
+anura.data23female<-anura.data[,c(1,4)]
+anura.data23female<-anura.data23female %>% drop_na(log_femaleSVL)
+female.svl23<-setNames(anura.data23female$log_femaleSVL,rownames(anura.data23female))
+k.female.svl23<-phylosig(tree,female.svl23,test=TRUE)
+k.female.svl23
+
+# Calculate K for SDI
+anura.data23sdi<-anura.data[,c(1,5)]
+anura.data23sdi<-anura.data23sdi %>% drop_na(log_SDI)
+sdi23<-setNames(anura.data23sdi$log_SDI,rownames(anura.data23sdi))
+k.sdi23<-phylosig(tree,sdi23,test=TRUE)
+k.sdi23
+
+#Calculate K for DF
+anura.data23df<-anura.data[,c(1,2)]
+anura.data23df<-anura.data23df %>% drop_na(log_DF)
+DF23<-setNames(anura.data23df$log_DF,rownames(anura.data23df))
+k.DF23<-phylosig(tree,DF23,test=TRUE)
+k.DF23
+```
+
+The second method to calculate phylogenetic signal for continuous variables will be **λ** (Pagel 1997, 1999). Revell (2018) affirms that one possible way to interpret Pagel's λ is: 
+
+- λ = 0, means phylogenetic signal equivalent to that expected if the data arose on a star phylogeny (that is, no phylogenetic signal)
+- λ = 1, corresponds to a Brownian motion model
+
+```{r "pagel's lambda"}
+#Calculate lambda for male SVL
+male.svl23<-setNames(anura.data23male$log_maleSVL,rownames(anura.data23male))
+lambda.male.svl23<-phylosig(tree,male.svl23,method="lambda",test=TRUE)
+lambda.male.svl23
+
+#Calculate lambda for female SVL
+female.svl23<-setNames(anura.data23female$log_femaleSVL,rownames(anura.data23female))
+lambda.female.svl23<-phylosig(tree,female.svl23,method="lambda",test=TRUE)
+lambda.female.svl23
+
+# Calculate lambda for SDI
+sdi23<-setNames(anura.data23sdi$log_SDI,rownames(anura.data23sdi))
+lambda.sdi23<-phylosig(tree,sdi23,method="lambda",test=TRUE)
+lambda.sdi23
+
+#Calculate lambda for DF
+DF23<-setNames(anura.data23df$log_DF,rownames(anura.data23df))
+lambda.DF23<-phylosig(tree,DF23,method="lambda",test=TRUE)
+lambda.DF23
+```
+
+Finally, we need to calculate the phylogenetic signal of calling place (discrete character). We estimated the **D value** (Fritz & Purvis 2010) using the function *phylo.d* in R package ‘caper’ (Orme et al. 2013). 
+
+- D>1 means that the distribution of binary traits is over dispersed across the phylogeny
+- D=0 means that the trait is distributed as expected under the Brownian motion
+- D<0 means that the trait is more conserved than the Brownian expectation
+
+```{r "D signal"}
+anura.data.phylo.d<-read.csv("dtab.calling_place.csv",header=TRUE, sep=",", fileEncoding="UTF-8-BOM") #because D only calculates phylogenetic signal for binary characters, we dropped ambiguous rows from the dataset and used UTF-8-BOM to remove errors on species column name
+tree.crop<-drop.tip(tree,as.character(anura.data.phylo.d[,1])) #prune the tree             
+study.tree<-(drop.tip(tree,tree.crop$tip.label))
+study.tree$node.label <- makeLabel(study.tree)$node.label 
+comp.data <- comparative.data(phy=study.tree,data=anura.data.phylo.d,names.col="Species",vcv=T,vcv.dim=2) #create an object with both tree and data, specifying the column containing species names to match the tree
+PhyloD <- phylo.d(comp.data, binvar=Calling_place)
+print(PhyloD)
+```
+
+## 3. Phylogenetic Comparative Analyses
+
+Our dataset contains continuous variables (e.g., body size [log mm], sexual size dimorphism [log 1-female/male] and dominant frequency [Hz]) and a single categorical variable (calling place: lotic vs lentic vs ambiguous).
+
+```{r "startnow", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#Data
+testeaa = read.csv("S3_groups.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeaa = testeaa[,c(1,2,3,4,5,6,7,8)]
+testeaa = testeaa %>% drop_na(log_SDI)
+testeaa = testeaa %>% drop_na(log_DF)
+
+#Phylogeny
+tree.cropa.31a = drop.tip(tree,as.character(testeaa[,1]))             
+study.treea.31a= (drop.tip(tree,tree.cropa.31a$tip.label))
+study.treea.31a$node.label = makeLabel(study.treea.31a)$node.label
+
+#Checking multicollinearity
+vif_check = lm(log_DF ~ log_maleSVL+log_SDI+Calling_place,testeaa)
+vif_pgls = car::vif(vif_check)
+vif_pgls
+
+#PGLS
+comp.dataaa <- comparative.data(phy=study.treea.31a,data=testeaa,names.col="Species",vcv=T,vcv.dim=2)
+modelaa<-pgls(log_DF~log_maleSVL+log_SDI+Calling_place,data=comp.dataaa)
+summary (modelaa)
+```
+
+### 3.1 PGLS: Dominant frequency ~ Sexual Dimorphism 
+
+#### 3.1.1 Combining data for all Cophomantini
+
+General 
+```{r "zzum", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#Data
+testea<-read.csv("S3_groups.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testea<-testea[,c(1,2,3,4,5,6,7,8)]
+testea <-testea %>% drop_na(log_SDI)
+testea <-testea %>% drop_na(log_DF)
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea,names.col="Species",vcv=T,vcv.dim=2)
+modela<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela)
+
+#Plot
+testea <- testea[!grepl("ambiguous", testea$Calling_place),]
+plot31<-ggplot(testea,aes(x=log_SDI, y=log_DF))+
+  xlab("\nSexual Size Dimorphism")+ylab("log Dominant Frequency (Hz)\n")+
+  geom_point(mapping = aes(colour=Calling_place)) +
+  theme_classic()+
+  theme(legend.position = "left")+
+  geom_smooth(method = "lm",se=FALSE,aes(color=Calling_place))+
+  scale_fill_manual(values = c("#FA1E1B", "#5E99EC"))+
+  theme(plot.title = element_text(hjust = 0.5))
+ggMarginal(plot31, type="histogram", groupColour = TRUE, groupFill = TRUE)
+ggsave(filename="_1_pgls_sdi_df.jpg", plot=last_plot())
+
+#Density: SDI
+mumu=ddply(testea, "Calling_place", summarise, DF_mean_habitat=mean(log_SDI))
+ggplot(testea, aes(x=log_SDI, fill=Calling_place))+
+  geom_density(alpha=0.4)+
+  theme_classic()+
+  labs(x="\nSexual Size Dimorphism", y = "Density\n")+
+  geom_vline(data=mumu, aes(xintercept=DF_mean_habitat, color=Calling_place), 
+             linetype="dashed")
+
+#Density: DF
+mumudf=ddply(testea, "Calling_place", summarise, DF_mean_habitat=mean(log_DF))
+ggplot(testea, aes(x=log_DF, fill=Calling_place))+
+  geom_density(alpha=0.4)+
+  theme_classic()+
+  labs(x="\nlog Dominant Frequency (Hz)", y = "Density\n")+
+  geom_vline(data=mumudf, aes(xintercept=DF_mean_habitat, color=Calling_place), 
+             linetype="dashed")
+```
+
+#### 3.1.2 Separate analysis for each genus
+
+Separated for genera: Myersiohyla + Nesorohyla (p-value: 0.06246)
+```{r "zzumgmyneso", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Mysersiohyla and Nesorohyla
+testeag <- read.csv("S3_groups.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<- testeag[,c(1,3,6,7)]
+testea <- testeag %>% drop_na(log_SDI)
+testea <- testea[!grepl("Aplastodiscus", testea$Genera),]
+testea <- testea[!grepl("Boana", testea$Genera),]
+testea <- testea[!grepl("Bokermannohyla", testea$Genera),]
+testea.myersiohyla <- testea[!grepl("Hyloscirtus", testea$Genera),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.myersiohyla[,1]))  
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.myersiohyla,names.col="Species",vcv=T,vcv.dim=2)
+modela.myersiohyla.nesorohyla<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.myersiohyla.nesorohyla)
+
+# Plot
+SDI_myer = setNames(testea.myersiohyla[,"log_SDI"], rownames(testea.myersiohyla))
+DF_myer = setNames(testea.myersiohyla[,"log_DF"], rownames(testea.myersiohyla))
+pic.SDI.myer = pic(SDI_myer, study.treea.31)
+pic.DF.myer = pic(DF_myer, study.treea.31)
+fit.pic.myer = lm (pic.DF.myer ~ pic.SDI.myer+0)
+myer_data = data.frame(x=pic.SDI.myer, y=pic.DF.myer)
+myer.plot = ggplot(myer_data, aes(x=x, y=y))+
+  geom_point() +
+  geom_smooth(method=lm)+
+  theme_bw() + 
+  xlab("\nContrasts for SSD") +
+  ylab("Contrasts for DF (Hz)\n")+
+  ggtitle("Myersiohyla + Nesorohyla")+
+  theme(plot.title = element_text(hjust=0.5), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  annotate("text", 
+           label="p = 0.0624," ~ R^2 ~ "= 0.9808", 
+           x=-0.015, 
+           y=0.2, 
+           size = 3, 
+           color='gray')
+myer.plot
+ggsave(filename="_1_myersio_pgls_fig3.jpg", plot=last_plot())
+```
+
+Separated for genera: Hyloscirtus (p=0.9186)
+```{r "zzumghyloscirtus", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Hyloscirtus
+testeag<-read.csv("S3_groups.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <- testea[!grepl("Aplastodiscus", testea$Genera),]
+testea <- testea[!grepl("Boana", testea$Genera),]
+testea <- testea[!grepl("Bokermannohyla", testea$Genera),]
+testea <- testea[!grepl("Myersiohyla", testea$Genera),]
+testea.hyloscirtus <- testea[!grepl("Nesorohyla", testea$Genera),]
+testea.hyl <- testea.hyloscirtus[!grepl("ambiguous", testea$Calling_place),]
+testea.hyl = testea.hyl %>% drop_na(Calling_place)
+testea.hyl = testea.hyl %>% drop_na(log_DF)
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.hyl[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.hyloscirtus,names.col="Species",vcv=T,vcv.dim=2)
+modela.hyloscirtus<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.hyloscirtus)
+
+# Plot
+SDI_hylo = setNames(testea.hyl[,"log_SDI"], rownames(testea.hyl))
+DF_hylo = setNames(testea.hyl[,"log_DF"], rownames(testea.hyl))
+pic.SDI.hylo = pic(SDI_hylo, study.treea.31)
+pic.DF.hylo = pic(DF_hylo, study.treea.31)
+fit.pic.hylo = lm (pic.DF.hylo ~ pic.SDI.hylo+0)
+hylo_data = data.frame(x=pic.SDI.hylo, y=pic.DF.hylo)
+hylo.plot = ggplot(hylo_data, aes(x=x, y=y))+
+  geom_point() +
+  geom_smooth(method=lm)+
+  theme_bw() + 
+  xlab("\nContrasts for SSD") +
+  ylab("Contrasts for DF (Hz)\n")+
+    ggtitle("Hyloscirtus")+
+  theme(plot.title = element_text(hjust=0.5), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  annotate("text", 
+           label="p = 0.9186," ~ R^2 ~ "= 0.0006", 
+           x=-0.12, 
+           y=1.6, 
+           size = 3, 
+           color='gray')
+hylo.plot
+ggsave(filename="_1_hylos_pgls_fig3.jpg", plot=last_plot())
+```
+
+Separated for genera: Bokermannohyla (p=0.006652)
+```{r "zzumgbok", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Bokermannohyla
+testeag<-read.csv("S3_groups.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <- testea[!grepl("Aplastodiscus", testea$Genera),]
+testea <- testea[!grepl("Boana", testea$Genera),]
+testea <- testea[!grepl("Hyloscirtus", testea$Genera),]
+testea <- testea[!grepl("Myersiohyla", testea$Genera),]
+testea.bokermannohyla <- testea[!grepl("Nesorohyla", testea$Genera),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.bokermannohyla[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.bokermannohyla,names.col="Species",vcv=T,vcv.dim=2)
+modela.bokermannohyla<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.bokermannohyla)
+
+#Plot
+SDI_bok = setNames(testea.bokermannohyla[,"log_SDI"], rownames(testea.bokermannohyla))
+DF_bok = setNames(testea.bokermannohyla[,"log_DF"], rownames(testea.bokermannohyla))
+pic.SDI.bok = pic(SDI_bok, study.treea.31)
+pic.DF.bok = pic(DF_bok, study.treea.31)
+fit.pic.bok = lm (pic.DF.bok ~ pic.SDI.bok+0)
+bok_data = data.frame(x=pic.SDI.bok, y=pic.DF.bok)
+bok.plot = ggplot(bok_data, aes(x=x, y=y))+
+  geom_point() +
+  geom_smooth(method=lm)+
+  theme_bw() + 
+  xlab("\nContrasts for SSD") +
+  ylab("Contrasts for DF (Hz)\n")+
+  ggtitle("Bokermannohyla")+
+  theme(plot.title = element_text(hjust=0.5), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  annotate("text", 
+           label="p = 0.0067," ~ R^2 ~ "= 0.8698", 
+           x=-0.214, 
+           y=1.2, 
+           size = 3, 
+           color='gray')
+bok.plot
+ggsave(filename="_1_bok_pgls_fig3.jpg", plot=last_plot())
+```
+
+Separated for genera: Aplastodiscus (p=0.929)
+```{r "zzumgaplastodiscus", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+
+#data input for Aplastodiscus
+testeag<-read.csv("S4_fig1.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,3,6,20)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <- testea[!grepl("Boana", testea$Genera),]
+testea <- testea[!grepl("Bokermannohyla", testea$Genera),]
+testea <- testea[!grepl("Hyloscirtus", testea$Genera),]
+testea <- testea[!grepl("Myersiohyla", testea$Genera),]
+testea.aplastodiscus <- testea[!grepl("Nesorohyla", testea$Genera),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.aplastodiscus[,1]))  
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.aplastodiscus,names.col="Species",vcv=T,vcv.dim=2)
+modela.aplastodiscus<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.aplastodiscus)
+
+#Plot
+SDI_aplas = setNames(testea.aplastodiscus[,"log_SDI"], rownames(testea.aplastodiscus))
+DF_aplas = setNames(testea.aplastodiscus[,"log_DF"], rownames(testea.aplastodiscus))
+pic.SDI.aplas = pic(SDI_aplas, study.treea.31)
+pic.DF.aplas = pic(DF_aplas, study.treea.31)
+fit.pic.aplas = lm (pic.DF.aplas ~ pic.SDI.aplas+0)
+aplas_data = data.frame(x=pic.SDI.aplas, y=pic.DF.aplas)
+aplas.plot = ggplot(aplas_data, aes(x=x, y=y))+
+  geom_point() +
+  geom_smooth(method=lm)+
+  theme_bw() + 
+  xlab("\nContrasts for SSD") +
+  ylab("Contrasts for DF (Hz)\n")+
+  ggtitle("Aplastodiscus")+
+  theme(plot.title = element_text(hjust=0.5), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  annotate("text", 
+           label="p = 0.929," ~ R^2 ~ "= 0.0014", 
+           x=0, 
+           y=1.2, 
+           size = 3, 
+           color='gray')
+aplas.plot
+ggsave(filename="_1_aplas_pgls_fig3.jpg", plot=last_plot())
+```
+
+Separated for genera: Boana (p=0.844)
+```{r "zzumgboana", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+
+#Data input for Boana
+testeag<-read.csv("S4_fig1_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<- testeag[,c(1,3,6,20)]
+testea <- testea[!grepl("Aplastodiscus", testea$Genera),]
+testea <- testea[!grepl("Bokermannohyla", testea$Genera),]
+testea <- testea[!grepl("Hyloscirtus", testea$Genera),]
+testea <- testea[!grepl("Myersiohyla", testea$Genera),]
+testea <- testea[!grepl("Nesorohyla", testea$Genera),]
+testea <- testea %>% drop_na(log_SDI)
+testea.boana <- testea %>% drop_na(log_DF)
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.boana[,1]))          
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.boana,names.col="Species",vcv=T,vcv.dim=2)
+modela.boana<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.boana)
+
+#Plot
+SDI_boa = setNames(testea.boana[,"log_SDI"], rownames(testea.boana))
+DF_boa = setNames(testea.boana[,"log_DF"], rownames(testea.boana))
+pic.SDI.boa = pic(SDI_boa, study.treea.31)
+pic.DF.boa = pic(DF_boa, study.treea.31)
+fit.pic.boa = lm (pic.DF.boa ~ pic.SDI.boa+0)
+boa_data = data.frame(x=pic.SDI.boa, y=pic.DF.boa)
+boa.plot = ggplot(boa_data, aes(x=x, y=y))+
+  geom_point() +
+  geom_smooth(method=lm)+
+  theme_bw() + 
+  xlab("\nContrasts for SSD") +
+  ylab("Contrasts for DF (Hz)\n")+
+  ggtitle("Boana")+
+  theme(plot.title = element_text(hjust=0.5), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  annotate("text", 
+           label="p = 0.8973," ~ R^2 ~ "= 0.0002", 
+           x=-0.28, 
+           y=3.4, 
+           size = 3, 
+           color='gray')
+boa.plot
+ggsave(filename="_1_boa_pgls_fig3.jpg", plot=last_plot())
+```
+
+Graphic
+```{r "zzumg", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#Data
+testeag<-read.csv("S3_groups.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testeag,names.col="Species",vcv=T,vcv.dim=2)
+modela<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela)
+
+#Plot
+plot31g<-ggplot(testeag,aes(x=log_SDI, y=log_DF, shape=Genera, colour=Genera, fill=Genera)) +
+  geom_smooth(method="lm", se=F) +
+  geom_point(size=1) +
+  theme_bw() + 
+  xlab("\nSexual Size Dimorphism") +
+  ylab("log DF (Hz)\n")
+plot31g
+ggsave(filename="_1_pgls_sdi_df_genera.jpg", plot=last_plot())
+```
+
+#### 3.1.3 Separate analysis for each group of Boana
+
+Separated for groups of Boana: B. albopunctata group (p=0.2839)
+```{r "zzumgboanalbo", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana albopunctata
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. benitezi", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. faber", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. pulchella", testea$Group),]
+testea <- testea[!grepl("B. punctata", testea$Group),]
+testea.albopunctata <- testea[!grepl("B. semilineata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.albopunctata[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.albopunctata,names.col="Species",vcv=T,vcv.dim=2)
+modela.albopunctata<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.albopunctata)
+```
+
+Separated for groups of Boana: B. benitezi group (p=0.8248519)
+```{r "zzumgboanabeni", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana benitezi
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. albopunctata", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. faber", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. pulchella", testea$Group),]
+testea <- testea[!grepl("B. punctata", testea$Group),]
+testea.benitezi <- testea[!grepl("B. semilineata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.benitezi[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.benitezi,names.col="Species",vcv=T,vcv.dim=2)
+modela.benitezi<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.benitezi)
+```
+
+Separated for groups of Boana: B. faber group (p=0.9145)
+```{r "zzumgboanafaber", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana faber
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. albopunctata", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. benitezi", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. pulchella", testea$Group),]
+testea <- testea[!grepl("B. punctata", testea$Group),]
+testea.faber <- testea[!grepl("B. semilineata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.faber[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.faber,names.col="Species",vcv=T,vcv.dim=2)
+modela.faber<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.faber)
+```
+
+Separated for groups of Boana: B. pulchella group (p=0.5719)
+```{r "zzumgboanapulchella", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana pulchella
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. albopunctata", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. benitezi", testea$Group),]
+testea <- testea[!grepl("B. faber", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. punctata", testea$Group),]
+testea.pulchella <- testea[!grepl("B. semilineata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.pulchella[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.pulchella,names.col="Species",vcv=T,vcv.dim=2)
+modela.pulchella<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.pulchella)
+```
+
+Separated for groups of Boana: B. punctata group (p=0.46249)
+```{r "zzumgboanapunctata", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana punctata
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. albopunctata", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. benitezi", testea$Group),]
+testea <- testea[!grepl("B. faber", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. pulchella", testea$Group),]
+testea.punctata <- testea[!grepl("B. semilineata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.punctata[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.punctata,names.col="Species",vcv=T,vcv.dim=2)
+modela.punctata<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.punctata)
+```
+
+Separated for groups of Boana: B. punctata group (p=0.331)
+```{r "zzumgboanasemi", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana semilineata
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. albopunctata", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. benitezi", testea$Group),]
+testea <- testea[!grepl("B. faber", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. pulchella", testea$Group),]
+testea.semilineata <- testea[!grepl("B. punctata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.semilineata[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.semilineata,names.col="Species",vcv=T,vcv.dim=2)
+modela.semilineata<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela.semilineata)
+```
+
+Graphic for Boana groups
+```{r "zzuboanagroups", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#Data
+testeag<-read.csv("S3_groups.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <- testea[!grepl("Aplastodiscus", testea$Genera),]
+testea <- testea[!grepl("Bokermannohyla", testea$Genera),]
+testea <- testea[!grepl("Hyloscirtus", testea$Genera),]
+testea <- testea[!grepl("Myersiohyla", testea$Genera),]
+testea <- testea[!grepl("Nesorohyla", testea$Genera),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testeag,names.col="Species",vcv=T,vcv.dim=2)
+modela<-pgls(log_DF~log_SDI,data=comp.dataa)
+summary (modela)
+
+#Plot
+plot31g<-ggplot(testea,aes(x=log_SDI, y=log_DF, shape=Group, colour=Group, fill=Group)) +
+  geom_smooth(method="lm", se=F) +
+  geom_point(size=1) +
+  theme_bw() + 
+  xlab("\nSexual Size Dimorphism") +
+  ylab("log DF (Hz)\n")
+plot31g
+ggsave(filename="_1_pgls_sdi_df_boana_groups.jpg", plot=last_plot())
+```
+
+### 3.2 PGLS: DF ~ body size
+
+#### 3.2.1 DF ~ Male SVL
+
+General
+```{r,echo=F}
+#Data
+residuals31<-read.csv("S3.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+residuals31<-residuals31[,c(1,2,3,4)]
+residuals31 <-residuals31 %>% drop_na(Calling_place)
+residuals31 <-residuals31 %>% drop_na(log_DF)
+
+#Phylogeny
+tree.crop42.31<-drop.tip(tree,as.character(residuals31[,1]))             
+study.tree42.31<-(drop.tip(tree,tree.crop42.31$tip.label))
+study.tree42.31$node.label <- makeLabel(study.tree42.31)$node.label
+
+#PGLS
+comp.data42_df_maleSVL <- comparative.data(phy=study.tree42.31,data=residuals31,names.col="Species",vcv=T,vcv.dim=2)
+model42_df_maleSVL<-pgls(log_DF~log_maleSVL,data=comp.data42_df_maleSVL)
+summary (model42_df_maleSVL)
+
+#Plot
+residuals31 <- residuals31[!grepl("ambiguous", residuals31$Calling_place),]
+
+plot32<-ggplot(residuals31,aes(x=log_maleSVL, y=log_DF))+
+  xlab("\nlog Male SVL (mm)")+ylab("log Dominant Frequency (Hz)\n")+
+  theme_bw() + 
+  geom_point() +
+  geom_smooth(method = "lm",se=TRUE)+
+  scale_fill_manual(values = c("#FA1E1B", "#5E99EC"))+
+  theme(plot.title = element_text(hjust = 0.5))
+ggMarginal(plot32, type="histogram")
+ggsave(filename="_1_pgls_male_df.jpg", plot=last_plot())
+
+#Density: male SVL
+mumusvl=ddply(residuals31, "Calling_place", summarise, male_mean_habitat=mean(log_maleSVL))
+ggplot(residuals31, aes(x=log_maleSVL, fill=Calling_place))+
+  geom_density(alpha=0.4)+
+  theme_classic()+
+  labs(x="\nlog Male SVL (mm)", y = "Density\n")+
+  geom_vline(data=mumusvl, aes(xintercept=male_mean_habitat, color=Calling_place),
+             linetype="dashed")
+
+#Density: DF
+mumudf=ddply(residuals31, "Calling_place", summarise, df_mean_habitat=mean(log_DF))
+ggplot(residuals31, aes(x=log_DF, fill=Calling_place))+
+  geom_density(alpha=0.4)+
+  theme_classic()+
+  labs(x="\nlog DF (Hz)", y = "Density\n")+
+  geom_vline(data=mumudf, aes(xintercept=df_mean_habitat, color=Calling_place),
+             linetype="dashed")
+ggsave(filename="_3_density_habitat_df.jpg", plot=last_plot())
+```
+
+DF ~ Male SVL separated for each group of Boana.
+```{r "zzumg", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#Data
+testeag<-read.csv("S3_groups.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(log_SDI)
+testea <-testeag %>% drop_na(log_maleSVL)
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testeag,names.col="Species",vcv=T,vcv.dim=2)
+modela<-pgls(log_DF~log_maleSVL,data=comp.dataa)
+summary (modela)
+
+#Plot
+plot31mg<-ggplot(testeag,aes(x=log_maleSVL, y=log_DF, shape=Genera, colour=Genera, fill=Genera)) +
+  geom_smooth(method="lm", se=F) +
+  geom_point(size=1) +
+  theme_bw() + 
+  xlab("\nlog Male SVL (mm)") +
+  ylab("log DF ([)Hz)\n")
+plot31mg
+ggsave(filename="_1_pgls_male_df_genera.jpg", plot=last_plot())
+```
+
+#### 3.2.2 DF ~ Female SVL
+
+```{r,echo=F,fig.height=5,fig.width=5}
+#Data
+residuals31.f<-read.csv("S3.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+residuals31.f<-residuals31.f[,c(1,2,3,4,5,6,7)]
+
+#Phylogeny
+tree.crop42.31.f<-drop.tip(tree,as.character(residuals31.f[,1]))             
+study.tree42.31.f<-(drop.tip(tree,tree.crop42.31.f$tip.label))
+study.tree42.31.f$node.label <- makeLabel(study.tree42.31.f)$node.label
+
+#PGLS
+comp.data42_df_femaleSVL <- comparative.data(phy=study.tree42.31.f,data=residuals31.f,names.col="Species",vcv=T,vcv.dim=2)
+model42_df_femaleSVL<-pgls(log_DF~log_femaleSVL,data=comp.data42_df_femaleSVL)
+summary(model42_df_femaleSVL)
+```
+
+### 3.3 PGLS: DF ~ habitat 
+
+#### 3.3.1 Combining data for all species of Cophomantini
+
+Containing outliers
+```{r "PGLS DF and habitat without outlier"}
+#Data
+residuals34<-read.csv("S3.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+residuals34 <-residuals34 %>% drop_na(log_DF)
+residuals34 <-residuals34 %>% drop_na(Calling_place)
+
+#Phylogeny
+tree.crop34<-drop.tip(tree,as.character(residuals34[,1]))             
+study.tree34<-(drop.tip(tree,tree.crop34$tip.label))
+study.tree34$node.label <- makeLabel(study.tree34)$node.label
+
+#PGLS
+comp.data33_df_habitat <- comparative.data(phy=study.tree34,data=residuals34,names.col="Species",vcv=T,vcv.dim=2)
+model33_df_habitat<-pgls(log_DF~Calling_place,data=comp.data33_df_habitat)
+summary(model33_df_habitat)
+
+#Box plot
+pvio = ggplot(residuals34, aes(x=Calling_place, y=log_DF))+ 
+  geom_boxplot(aes(fill = Calling_place), position = position_dodge(0.9))+
+  scale_fill_manual(values = c("#999999","#FA1E1B", "#3D68B3"))+
+  theme_bw() + 
+  xlab("\nVocalization site") +
+  ylab("log DF (Hz)\n")
+pvio + guides(fill=guide_legend(title="Vocalization site")) #Title of the legend
+ggsave(filename="violinPlot_habitat_df.jpg", plot=last_plot())
+
+```
+
+Removing outliers
+```{r "PGLS DF and habitat without outlier"}
+#Data
+residuals34<-read.csv("dtab.calling_place.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+residuals34 <-residuals34 %>% drop_na(log_DF)
+residuals34 <-residuals34 %>% drop_na(Calling_place)
+
+#Phylogeny
+tree.crop34<-drop.tip(tree,as.character(residuals34[,1]))             
+study.tree34<-(drop.tip(tree,tree.crop34$tip.label))
+study.tree34$node.label <- makeLabel(study.tree34)$node.label
+
+#PGLS
+comp.data33_df_habitat <- comparative.data(phy=study.tree34,data=residuals34,names.col="Species",vcv=T,vcv.dim=2)
+model33_df_habitat<-pgls(log_DF~Calling_place,data=comp.data33_df_habitat)
+summary(model33_df_habitat)
+
+#Violin plot
+pvio <- ggplot(residuals34, aes(x=Calling_place, y=log_DF, color=Calling_place)) + 
+  geom_violin() +
+  geom_boxplot(width=0.1) 
+pvio+scale_color_manual(values=c("#FA1E1B", "#3D68B3"))
+ggsave(filename="violinPlot_habitat_df_no_outliers.jpg", plot=last_plot())
+```
+
+#### 3.3.2 Separate analysis for each group of Boana
+
+Below, see that most variation in vocalization site is concentrated in Boana; thus, we will run separate PGLS DF ~ habitat for each group of Boana
+
+```{r "boxplot DF~habitat by genera"}
+residuals34g<-read.csv("S3_groups.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+residuals34g <-residuals34g %>% drop_na(log_DF)
+residuals34g <-residuals34g %>% drop_na(Calling_place)
+residuals34g <- residuals34g[!grepl("ambiguous", residuals34g$Calling_place),]
+
+#Table
+dfh = residuals34g %>%
+  filter(Calling_place %in% c("lentic", "lotic")) %>%
+  group_by(Genera, Calling_place) %>%
+  summarise(counts = n())
+dfh
+
+#Boxplot
+e = ggplot(residuals34g, aes(x=Genera, y=log_DF))
+e2 = e + geom_boxplot(
+  aes(fill = Calling_place),
+  position = position_dodge(0.9)
+  )+
+  scale_fill_manual(values = c("#FA1E1B", "#3D68B3"))+
+  theme_bw() + 
+  xlab("\nVocalization site") +
+  ylab("log DF (Hz)\n")
+e2= e2 + guides(fill=guide_legend(title="Vocalization site")) #Title of the legend
+e2
+ggsave(filename="Plot_habitat_df_yeah.jpg", plot=last_plot())
+```
+
+Separated for groups of Boana: B. albopunctata group (p=0.5565)
+```{r "zzumgboanaalb", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana albopunctata
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(Calling_place)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. benitezi", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. punctata", testea$Group),]
+testea <- testea[!grepl("B. faber", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. pulchella", testea$Group),]
+testea <- testea[!grepl("ambiguous", testea$Calling_place),]
+testea.albo2 <- testea[!grepl("B. semilineata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.albo2[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.albo2,names.col="Species",vcv=T,vcv.dim=2)
+modela.albo2<-pgls(log_DF~Calling_place,data=comp.dataa)
+summary (modela.albo2)
+```
+
+Separated for groups of Boana: B. faber group (p=0.1223)
+```{r "zzumgboanafabs", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana faber
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(Calling_place)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. albopunctata", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. benitezi", testea$Group),]
+testea <- testea[!grepl("B. pulchella", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. punctata", testea$Group),]
+testea <- testea[!grepl("ambiguous", testea$Calling_place),]
+testea.faber2 <- testea[!grepl("B. semilineata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.faber2[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.faber2,names.col="Species",vcv=T,vcv.dim=2)
+modela.faber2<-pgls(log_DF~Calling_place,data=comp.dataa)
+summary (modela.faber2)
+```
+
+Separated for groups of Boana: B. pulchella group (p=0.1005)
+```{r "zzumgboanaapulchella2", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana pulchella
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(Calling_place)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. albopunctata", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. benitezi", testea$Group),]
+testea <- testea[!grepl("B. faber", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. punctata", testea$Group),]
+testea <- testea[!grepl("ambiguous", testea$Calling_place),]
+testea.pulchella2 <- testea[!grepl("B. semilineata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.pulchella2[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.pulchella2,names.col="Species",vcv=T,vcv.dim=2)
+modela.pulchella2<-pgls(log_DF~Calling_place,data=comp.dataa)
+summary (modela.pulchella2)
+```
+
+Separated for groups of Boana: B. punctata group (p=0.79065)
+```{r "zzumgboanapu", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana punctata
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(Calling_place)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. albopunctata", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. benitezi", testea$Group),]
+testea <- testea[!grepl("B. faber", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. pulchella", testea$Group),]
+testea <- testea[!grepl("ambiguous", testea$Calling_place),]
+testea.punctata2 <- testea[!grepl("B. semilineata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.punctata2[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.punctata2,names.col="Species",vcv=T,vcv.dim=2)
+modela.punctata2<-pgls(log_DF~Calling_place,data=comp.dataa)
+summary (modela.punctata2)
+```
+
+Separated for groups of Boana: B. semilineata group (p=0.0.2772)
+```{r "umgboaninhasemi", message=FALSE,warning=FALSE,echo=FALSE,error=FALSE}
+#data input for Boana semilineata
+testeag<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+testeag<-testeag[,c(1,2,3,4,5,6,7,8)]
+testea <-testeag %>% drop_na(Calling_place)
+testea <-testeag %>% drop_na(log_DF)
+testea <- testea[!grepl("B. albopunctata", testea$Group),]
+testea <- testea[!grepl("B. claresignata", testea$Group),]
+testea <- testea[!grepl("B. benitezi", testea$Group),]
+testea <- testea[!grepl("B. faber", testea$Group),]
+testea <- testea[!grepl("B. pellucens", testea$Group),]
+testea <- testea[!grepl("B. pulchella", testea$Group),]
+testea <- testea[!grepl("ambiguous", testea$Calling_place),]
+testea.semilineata2 <- testea[!grepl("B. punctata", testea$Group),]
+
+#Phylogeny
+tree.cropa.31<-drop.tip(tree,as.character(testea.semilineata2[,1]))             
+study.treea.31<-(drop.tip(tree,tree.cropa.31$tip.label))
+study.treea.31$node.label <- makeLabel(study.treea.31)$node.label
+
+#PGLS
+comp.dataa <- comparative.data(phy=study.treea.31,data=testea.semilineata2,names.col="Species",vcv=T,vcv.dim=2)
+modela.semilineata2<-pgls(log_DF~Calling_place,data=comp.dataa)
+summary (modela.semilineata2)
+```
+
+Graphic for each group of Boana
+```{r "boxplot DF~habitat by genera"}
+residuals34gb<-read.csv("S3_boana.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+residuals34gb <-residuals34gb %>% drop_na(log_DF)
+residuals34gb <-residuals34gb %>% drop_na(Calling_place)
+residuals34gb <- residuals34gb[!grepl("ambiguous", residuals34gb$Calling_place),]
+
+dfb = residuals34gb %>%
+  filter(Calling_place %in% c("lentic", "lotic")) %>%
+  group_by(Group, Calling_place) %>%
+  summarise(counts = n())
+dfb
+
+eboana = ggplot(residuals34gb, aes(x=Group, y=log_DF))
+e2boana = eboana + geom_boxplot(
+  aes(fill = Calling_place),
+  position = position_dodge(0.9)
+  )+
+  scale_fill_manual(values = c("#FA1E1B", "#3D68B3"))+
+  guides(fill=guide_legend(title="Vocalization site"))+
+  xlab("\nSpecies group") +
+  ylab("log DF (Hz)\n")
+e2boana
+```
+
+## 4. Ancestral States Reconstruction
+
+For continuous characters (DF, sexual size dimorphism, male and female SVL), fast estimation of maximum likelihood ancestral states with 95-percent confident intervals on the estimates was performed using fastAnc function in the ‘phytools’ R-package (Revell 2012). For final character mapping of ancestral states on the phylogeny, we used the contMap function in ‘phytools’ (Revell 2012). 
+
+```{r "dfanco"}
+#logDF
+df.4<-read.csv("S4_fig1.csv",row.names=1,sep=",",fileEncoding="UTF-8-BOM")
+df.4<-df.4[,c(2,6)] # Dataset with DF, SVL, SDI and calling place data
+df.4<-df.4 %>% drop_na(Mean_Dominant_frequency) # Remove missing data
+df.4<-setNames(df.4$Mean_Dominant_frequency,rownames(df.4)) #complete dataset for DF
+obj.df4<-name.check(tree,df.4)
+btree.cut.df4<-drop.tip(tree,obj.df4$tree_not_data) #pruned tree
+name.check(btree.cut.df4,df.4)
+fit.df<-fastAnc(btree.cut.df4,df.4,vars=TRUE,CI=TRUE) #estimate states at internal nodes for male SVL
+print(fit.df,printlen=10)
+obj.df4<-contMap(btree.cut.df4,df.4,plot=FALSE)
+obj.df4<-setMap(obj.df4,invert=TRUE)
+plot(obj.df4,fsize=c(0.26,1),outline=FALSE,lwd=c(3,7),leg.txt="log Dominant Frequency (Hz)") 
+```
+
+```{r "dfanco"}
+#DF
+df.4<-read.csv("S3.csv",row.names=1,sep=",",fileEncoding="UTF-8-BOM")
+df.4<-df.4[,c(1,2,6)] # Dataset with DF, SVL, SDI and calling place data
+df.4<-df.4 %>% drop_na(Dominant_frequency) # Remove missing data
+df.4<-setNames(df.4$Dominant_frequency,rownames(df.4)) #complete dataset for DF
+obj.df4<-name.check(tree,df.4)
+btree.cut.df4<-drop.tip(tree,obj.df4$tree_not_data) #pruned tree
+name.check(btree.cut.df4,df.4)
+fit.df<-fastAnc(btree.cut.df4,df.4,vars=TRUE,CI=TRUE) #estimate states at internal nodes for male SVL
+print(fit.df,printlen=10)
+obj.df4<-contMap(btree.cut.df4,df.4,plot=FALSE)
+obj.df4<-setMap(obj.df4,invert=TRUE)
+plot(obj.df4,fsize=c(0.26,1),outline=FALSE,lwd=c(3,7),leg.txt="Dominant Frequency (Hz)") 
+```
+
+```{r "ancddwdo"}
+#Male SVL
+svl.4<-setNames(xx$SVL_male,rownames(xx)) #complete dataset for calling place, male and female svl
+obj.4<-name.check(tree,svl.4)
+btree.cut.4<-drop.tip(tree,obj.4$tree_not_data) #pruned tree
+name.check(btree.cut.4,svl.4)
+fit.male<-fastAnc(btree.cut.4,svl.4,vars=TRUE,CI=TRUE) #estimate states at internal nodes for male SVL
+print(fit.male,printlen=10)
+obj.4<-contMap(btree.cut.4,svl.4,plot=FALSE)
+obj.4<-setMap(obj.4,invert=TRUE)
+plot(obj.4,fsize=c(0.26,1),outline=FALSE,lwd=c(3,7),leg.txt="Male SVL(mm)") 
+```
+
+```{r "ancdkkk"}
+#Female SVL
+svl.4f<-read.csv("S3.csv",row.names=1,sep=",",fileEncoding="UTF-8-BOM")
+svl.4f<-svl.4f[,c(1,4,14)] # Dataset with female SVL and calling place data
+svl.4f<-svl.4f %>% drop_na(SVL_female) # Remove missing data
+
+svl.4f<-setNames(svl.4f$SVL_female,rownames(svl.4f)) #dataset
+obj.4f<-name.check(tree,svl.4f)
+btree.cut.4f<-drop.tip(tree,obj.4f$tree_not_data) #tree
+name.check(btree.cut.4f,svl.4f)
+fit.female<-fastAnc(btree.cut.4f,svl.4f,vars=TRUE,CI=TRUE)
+print(fit.female,printlen=10)
+obj.4f<-contMap(btree.cut.4f,svl.4f,plot=FALSE)
+obj.4f<-setMap(obj.4f,invert=TRUE)
+plot(obj.4f,fsize=c(0.26,0.8),outline=FALSE,lwd=c(3,7),leg.txt="Female SVL(mm)")
+```
+
+```{r "ancdkgdxdkk"}
+#SDI
+svl.4sd<-read.csv("S3.csv",row.names=1,sep=",",fileEncoding="UTF-8-BOM")
+svl.4sd<-svl.4sd[,c(1,5,9)] # Dataset with female SVL and calling place data
+svl.4sd<-svl.4sd %>% drop_na(SDI) # Remove missing data
+svl.4sd<-setNames(svl.4sd$SDI,rownames(svl.4sd)) #dataset
+obj.4sd<-name.check(tree,svl.4sd)
+btree.cut.4sd<-drop.tip(tree,obj.4sd$tree_not_data) #tree
+name.check(btree.cut.4sd,svl.4sd)
+fit.sd<-fastAnc(btree.cut.4sd,svl.4sd,vars=TRUE,CI=TRUE)
+print(fit.sd,printlen=10)
+obj.4sd<-contMap(btree.cut.4sd,svl.4sd,plot=FALSE)
+obj.4sd<-setMap(obj.4sd,invert=TRUE)
+plot(obj.4sd,fsize=c(0.26,0.6),outline=FALSE,lwd=c(3,7),leg.txt="Sexual Size Dimorphism")
+```
+
+For discrete character (calling place), ancestral states reconstruction was fitted for three evolutionary models:
+
+- (I) ER is an equal-rates model in which a single parameter drives all transition rates at the same rate (Pagel 1994; Lewis 2001)
+
+- (II) SYM is a symmetric model in which only forward and reverse transitions share the same rate
+
+- (III) ARD is an all-rates-different model (Paradis et al. 2004). 
+
+Using fitDiscrete function in the 'geiger' R-package (Harmon et al. 2007), we selected the model with the lowest AICc which best describes the evolution of our discrete trait. 
+
+
+```{r "ancapfede"}
+#Read data
+site<-read.csv("S3.csv",header=TRUE,row.names=1,sep=",")
+site<-site[,c(1,3)] # dataset with calling place, log DF, and log male SVL
+site<-site %>% drop_na(Calling_place) # Remove missing data
+site<-setNames(site$Calling_place,rownames(site)) #dataset
+obj.site<-name.check(treeultra,site)
+btree.cut.site<-drop.tip(treeultra,obj.site$tree_not_data) #prune the tree
+name.check(btree.cut.site,site)
+
+#Make simmap
+zelda=make.simmap(btree.cut.site,site,model="ARD")
+
+#add color scheme and legend
+nintendo = c("#999999","#FA1E1B", "#3D68B3")
+cols<-setNames(palette(nintendo)[1:length(unique(getStates(zelda,"tips")))],sort(unique(getStates(zelda,"tips"))))
+
+#Stochastic mapping 100 simulations
+zelda.x<-getStates(zelda,"tips")
+zelda.trees<-make.simmap(zelda,zelda.x,model="ARD",nsim=100)
+zelda.obj<-describe.simmap(zelda.trees,plot=FALSE)
+```
+
+```{r "ancapffdfse"}
+plot(zelda.obj, fsize=0.37, colors=cols, cex=c(0.2,0.17))
+nodelabels(pie=zelda.obj$ace,piecol=cols,cex=0.25)
+add.simmap.legend(colors=cols,prompt=FALSE,x=0.8*par()$usr[1],y=25,fsize=0.9)
+```
+
+```{r "ancapffdfse"}
+plot(zelda.obj, fsize=0.4,type="fan", colors=cols, cex=c(0.2,0.2))
+nodelabels(pie=zelda.obj$ace,piecol=cols,cex=0.2)
+add.simmap.legend(colors=cols,prompt=FALSE,x=0.8*par()$usr[1],y=25,fsize=0.9)
+```
+
+```{r "ancapfedtte"}
+#Compare models
+fit.geigerER<-fitDiscrete(btree.cut.site,site,model="ER")#which is the best model? ER?
+fit.geigerARD<-fitDiscrete(btree.cut.site,site,model="ARD")#which is the best model? ARD?
+fit.geigerSYM<-fitDiscrete(btree.cut.site,site,model="SYM")#which is the best model? SYM?
+fit.geiger.summ<-setNames(c(fit.geigerER$opt$aicc,fit.geigerARD$opt$aicc,fit.geigerSYM$opt$aicc),c("ER","ARD","SYM")) #create a table with AICc of each model
+fit.geiger.summ #compare the AICc easily and see that ARD has the lowest AICc
+```
+
+
+## 5. Supporting analyses
+
+### 5.1 Fitting different models
+
+We will fit different models of evolution to compare the fit of five tree transformation models against a null model of BM: 
+
+- Brownian motion ("BM"), which assumes that the correlation among trait values is proportional to the extent of shared ancestry for pairs of species (Felsenstein 1973). Although trait values change randomly, BM is not necessarily equivalent to genetic drift. Hansen and Martins (1996) identified different evolutionary models with selection in which traits evolve under Brownian motion. 
+
+- Ornstein-Uhlenbeck model ("OU"), which is used to model trait evolution with the tendency towards a central value - such as under stabilizing selection (Butler & King 2004).
+
+- Early-burst model ("EB"), in which character change tends to be concentrated towards the base of the tree - such as under adaptive radiation (Harmon et al. 2010). In this model, lineages begin diversifying rapidly, but at some point of time the species would go back to diversifying at their background rates (Yoder et al. 2010). This phenomenon might be a product of species entering new adaptive zones (Simpson 1945), such as dispersal to new areas, extinction of competitors and the evolution of new traits that allow them to explore resources opportunistically.
+
+First, we fitted models for male SVL.
+
+```{r "fitting models"}
+#Fit BM for male SVL
+fitBM3.maleSVL<-fitContinuous(tree,male.svl23)
+fitBM3.maleSVL
+#Fit OU for male SVL
+fitOU3.maleSVL<-fitContinuous(tree,male.svl23,model="OU")
+fitOU3.maleSVL
+#Fit EB for male SVL
+fitEB3.maleSVL<-fitContinuous(tree,male.svl23,model="EB")
+fitEB3.maleSVL
+#Summary
+aic.vals.maleSVL<-setNames(c(fitBM3.maleSVL$opt$aicc,fitOU3.maleSVL$opt$aicc,fitEB3.maleSVL$opt$aicc),
+    c("BM","OU","EB"))
+aic.vals.maleSVL
+aic.w(aic.vals.maleSVL)
+```
+
+Second, we fitted models for female SVL.
+
+```{r "fitting models 2"}
+#Fit BM for female SVL
+fitBM3.femaleSVL<-fitContinuous(tree,female.svl23)
+fitBM3.femaleSVL
+#Fit OU for female SVL
+fitOU3.femaleSVL<-fitContinuous(tree,female.svl23,model="OU")
+fitOU3.femaleSVL
+#Fit EB for female SVL
+fitEB3.femaleSVL<-fitContinuous(tree,female.svl23,model="EB")
+fitEB3.femaleSVL
+#Summary
+aic.vals.femaleSVL<-setNames(c(fitBM3.femaleSVL$opt$aicc,fitOU3.femaleSVL$opt$aicc,fitEB3.femaleSVL$opt$aicc),
+    c("BM","OU","EB"))
+aic.vals.femaleSVL
+aic.w(aic.vals.femaleSVL)
+```
+
+Third, we fitted models for sexual size dimorphism.
+
+```{r "fitting models 3"}
+#Fit BM for SDI
+fitBM3.SDI<-fitContinuous(tree,sdi23)
+fitBM3.SDI
+#Fit OU for SDI
+fitOU3.SDI<-fitContinuous(tree,sdi23,model="OU")
+fitOU3.SDI
+#Fit EB for SDI
+fitEB3.SDI<-fitContinuous(tree,sdi23,model="EB")
+fitEB3.SDI
+#Summary
+aic.vals.SDI<-setNames(c(fitBM3.SDI$opt$aicc,fitOU3.SDI$opt$aicc,fitEB3.SDI$opt$aicc),
+    c("BM","OU","EB"))
+aic.vals.SDI
+aic.w(aic.vals.SDI)
+```
+
+Finally, we fitted models for DF.
+
+```{r "fitting models 4"}
+#Fit BM for DF
+fitBM3.DF<-fitContinuous(tree,DF23)
+fitBM3.DF
+#Fit OU for DF
+fitOU3.DF<-fitContinuous(tree,DF23,model="OU")
+fitOU3.DF
+#Fit EB for DF
+fitEB3.DF<-fitContinuous(tree,male.svl23,model="EB")
+fitEB3.DF
+#Summary
+aic.vals.DF<-setNames(c(fitBM3.DF$opt$aicc,fitOU3.DF$opt$aicc,fitEB3.DF$opt$aicc),
+    c("BM","OU","EB"))
+aic.vals.DF
+aic.w(aic.vals.DF)
+
+```
+
+### 5.2 PGLS residuals
+
+PGLS residuals for log_DF ~ log_maleSVL. 
+
+```{r,echo=F}
+#Plot residuals
+par(mfrow=c(2,2))
+plot(model42_df_maleSVL)
+```
+
+PGLS residuals for log_DF ~ log_femaleSVL.
+
+```{r,echo=F}
+#Plot residuals
+par(mfrow=c(2,2))
+plot(model42_df_femaleSVL)
+```
+
+PGLS residuals for log_DF ~ log_SDI
+
+```{r,echo=F}
+#Data
+residuals32<-read.csv("final_tab.csv",header=TRUE,sep=";",fileEncoding="UTF-8-BOM")
+residuals32<-residuals32[,c(1,7,11)]
+
+#Phylogeny
+tree.crop42<-drop.tip(tree,as.character(residuals32[,1]))             
+study.tree42<-(drop.tip(tree,tree.crop42$tip.label))
+study.tree42$node.label <- makeLabel(study.tree42)$node.label
+
+#PGLS
+comp.data42_df_sdi <- comparative.data(phy=study.tree42,data=residuals32,names.col="Species",vcv=T,vcv.dim=2)
+model42_df_sdi<-pgls(log_DF~log_SDI,data=comp.data42_df_sdi)
+
+#Plot residuals
+par(mfrow=c(2,2))
+plot(model42_df_sdi)
+```
+
+### 5.3 Phylogenetic signal of model residuals
+
+It's important that residuals of PGLS should not show phylogenetic signal. See below that there is no phylogenetic signal for residuals of log_DF ~ log_maleSVL.
+```{r,warning=FALSE,message=FALSE}
+k.residuals <- phylosignal(model42_df_maleSVL$phyres,reps=999,comp.data42_df_maleSVL$phy)
+kable(k.residuals)
+```
+
+Now, see below that there is no phylogenetic signal for residuals of log_DF ~ log_SDI
+
+```{r,warning=FALSE,message=FALSE}
+k.residuals1 <- phylosignal(modela$phyres,reps=999,comp.dataa$phy)
+kable(k.residuals1)
+```
+
+### 5.4 Testing correlation between mean and maximum values
+
+In macroevolutionary studies, there is no consensus about what is the best method to account for quantitative characters collected from multiple natural history databases and taxonomic papers. Some author declare that using maximum values registered in literature is better than mean values, because maximum values represent adult potential size of species (e.g., Röhr et al. 2016; Womack & Bell 2020). Other authors prefer to use mean values, because maximum values might skew analysis when there is a low sample size for some species (e.g., de Sá et al. 2020). 
+
+Here, we test the Pearson's correlation between mean and maximum values of SVL. 
+
+```{r "Pearson's correlation"}
+#Pearson's correlation between maximum and mean values of male SVL
+pearson.data.svl<-read.csv("S3.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+pearson.data.svl<-pearson.data.svl[,c(11,13)] # Dataset with female SVL and calling place data
+pearson.data.svl<-pearson.data.svl %>% drop_na(Max_SVL_Male) # Remove missing data
+cor.test(pearson.data.svl$Max_SVL_Male, pearson.data.svl$SVL_male)
+
+#Pearson's correlation between maximum and mean values of DF
+pearson.data.df<-read.csv("S3.csv",header=TRUE,sep=",",fileEncoding="UTF-8-BOM")
+pearson.data.df<-pearson.data.df[,c(7,9)] # Dataset with female SVL and calling place data
+pearson.data.df<-pearson.data.df %>% drop_na(Max_Dominant_frequency) # Remove missing data
+cor.test(pearson.data.df$Max_Dominant_frequency, pearson.data.df$Dominant_frequency)
+```
+
+The correlation coefficient between maximum and mean SVL (=0.9905567) and DF (=0.9721344) values were higher than 0.95. Because Pearson's correlation suggests that there is no significant difference in using mean or maximum values, we will follow our analyses using mean values. 
+
+### 5.5 Testing linear models to assess missing species
+
+The phylogenetic tree of Lyra et al. (2020) misses some species. However, we reviewed the data for all species. Thus, we will run linear models without considering the phylogeny.
+
+```{r "Load traits all data"}
+# Load matrix
+anura.data.all <- read.csv("S4.csv",header=TRUE, sep=",",row.names=1)
+# Dataset with DF, SVL, SDI and calling place data
+xx.all<-anura.data.all[,c(1,2,3,4,5,6,9,10,14,19)]
+# Remove missing data 
+xx.all_na<-xx.all %>% drop_na(log_DF,log_SDI,Calling_place)
+
+#Multiple Linear Regression
+mlr = lm(log_DF ~ log_maleSVL + log_SDI + Calling_place, xx.all_na)
+summary(mlr)
+
+#Detecting multicollinearity with VIF
+vif_1 = car::vif(mlr)
+vif_1
+```
+
+DF ~ male SVL
+```{r "analysis1"}
+#remove missing data
+xx1_na<-xx.all %>% drop_na(log_DF,log_maleSVL)
+head(xx1_na, 4)
+
+#Linear models: DF ~ male SVL
+all1 = lm (log_DF ~ log_maleSVL, xx1_na)
+summary(all1)
+
+#Plot
+ggplot(xx1_na, aes(x=log_maleSVL, y=log_DF)) +
+  xlab("\nlog Male SVL (mm)")+ylab("log Dominant Frequency (Hz)\n")+
+  theme_bw() + 
+  geom_point() +
+  geom_smooth(method = "lm",se=TRUE)+
+  scale_fill_manual(values = c("#FA1E1B", "#5E99EC"))+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+DF ~ SDI + habitat
+```{r "analysis1"}
+#remove missing data
+xx2_na<-xx.all %>% drop_na(log_DF,log_SDI,Calling_place)
+head(xx2_na, 4)
+
+#Linear models: DF ~ SDI
+all2 = lm (log_DF ~ log_SDI+Calling_place+Genera, xx2_na)
+summary(all2)
+
+#Plotting: DF ~ SDI
+ggplot(xx2_na, aes(x=log_SDI, y=log_DF)) +
+  xlab("\nSexual Size Dimorphism")+ylab("log Dominant Frequency (Hz)\n")+
+  theme_bw() + 
+  geom_point() +
+  geom_smooth(method = "lm",se=TRUE)+
+  scale_fill_manual(values = c("#FA1E1B", "#5E99EC"))+
+  theme(plot.title = element_text(hjust = 0.5))
+
+#Plotting: DF ~ SDI + Habitat
+plot31gagaw<-ggplot(xx2_na,aes(x=log_SDI, y=log_DF, shape=Calling_place, colour=Calling_place, fill=Calling_place)) +
+  geom_smooth(method="lm", se=F) +
+  geom_point(size=1) +
+  theme_bw() + 
+  xlab("\nSexual Size Dimorphism") +
+  ylab("log DF (Hz)\n")
+plot31gagaw
+
+#Plotting: DF ~ SDI+ Genera
+plot31gaga<-ggplot(xx2_na,aes(x=log_SDI, y=log_DF, shape=Genera, colour=Genera, fill=Genera)) +
+  geom_smooth(method="lm", se=F) +
+  geom_point(size=1) +
+  theme_bw() + 
+  xlab("\nSexual Size Dimorphism") +
+  ylab("log DF (Hz)\n")
+plot31gaga
+```
+
+Only Myersiohyla + Nesorohyla: DF ~ SDI (without phylogeny)
+```{r}
+# Load matrix
+all_fig3 <- read.csv("S4.csv",header=TRUE, sep=",",row.names=1)
+# Dataset with DF and SDI
+all_fig3<-all_fig3[,c(2,5,19)]
+# Remove missing data 
+all_fig3_myer<-all_fig3 %>% drop_na(log_DF,log_SDI)
+# Remove other genera
+all_fig3_myer <- all_fig3_myer[!grepl("Aplastodiscus", all_fig3_myer$Genera),]
+all_fig3_myer <- all_fig3_myer[!grepl("Boana", all_fig3_myer$Genera),]
+all_fig3_myer <- all_fig3_myer[!grepl("Bokermannohyla", all_fig3_myer$Genera),]
+all_fig3_myer <- all_fig3_myer[!grepl("Hyloscirtus", all_fig3_myer$Genera),]
+
+# Linear Regression
+all_lm_myer = lm(log_DF ~ log_SDI, all_fig3_myer)
+summary(all_lm_myer)
+
+#Plot
+all.myer.plot = ggplot(all_fig3_myer, aes(x=log_SDI, y=log_DF))+
+  geom_point() +
+  geom_smooth(method=lm)+
+  theme_bw() + 
+  xlab("\nSSD") +
+  ylab("DF (Hz)\n")+
+  ggtitle("Myersiohyla + Nesorohyla")+
+  theme(plot.title = element_text(hjust=0.5), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  annotate("text", 
+           label="p = 0.05503," ~ R^2 ~ "= 0.9925", 
+           x=0.055, 
+           y=3.43, 
+           size = 3, 
+           color='gray')
+all.myer.plot
+ggsave(filename="_1_myersio_allspecies_fig3.jpg", plot=last_plot())
+```
+
+Only Hyloscirtus: DF ~ SDI (without phylogeny)
+```{r}
+# Load matrix
+all_fig3 <- read.csv("S4.csv",header=TRUE, sep=",",row.names=1)
+# Dataset with DF and SDI
+all_fig3<-all_fig3[,c(2,5,19)]
+# Remove missing data 
+all_fig3_hylo<-all_fig3 %>% drop_na(log_DF,log_SDI)
+# Remove other genera
+all_fig3_hylo <- all_fig3_hylo[!grepl("Aplastodiscus", all_fig3_hylo$Genera),]
+all_fig3_hylo <- all_fig3_hylo[!grepl("Boana", all_fig3_hylo$Genera),]
+all_fig3_hylo <- all_fig3_hylo[!grepl("Bokermannohyla", all_fig3_hylo$Genera),]
+all_fig3_hylo <- all_fig3_hylo[!grepl("Myersiohyla", all_fig3_hylo$Genera),]
+all_fig3_hylo <- all_fig3_hylo[!grepl("Nesorohyla", all_fig3_hylo$Genera),]
+
+# Linear Regression
+all_lm_hylo = lm(log_DF ~ log_SDI, all_fig3_hylo)
+summary(all_lm_hylo)
+
+#Plot
+all.hylo.plot = ggplot(all_fig3_hylo, aes(x=log_SDI, y=log_DF))+
+  geom_point() +
+  geom_smooth(method=lm)+
+  theme_bw() + 
+  xlab("\nSSD") +
+  ylab("DF (Hz)\n")+
+  ggtitle("Hyloscirtus")+
+  theme(plot.title = element_text(hjust=0.5), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  annotate("text", 
+           label="p = 0.5356," ~ R^2 ~ "= 0.0216", 
+           x=0.066, 
+           y=3.14, 
+           size = 3, 
+           color='gray')
+all.hylo.plot
+ggsave(filename="_1_hylos_allspecies_fig3.jpg", plot=last_plot())
+```
+
+Only Bokermannohyla: DF ~ SDI + habitat (without phylogeny)
+```{r}
+# Load matrix
+all_fig3 <- read.csv("S4.csv",header=TRUE, sep=",",row.names=1)
+# Dataset with DF and SDI
+all_fig3<-all_fig3[,c(2,5,19)]
+# Remove missing data 
+all_fig3_bok<-all_fig3 %>% drop_na(log_DF,log_SDI)
+# Remove other genera
+all_fig3_bok <- all_fig3_bok[!grepl("Aplastodiscus", all_fig3_bok$Genera),]
+all_fig3_bok <- all_fig3_bok[!grepl("Boana", all_fig3_bok$Genera),]
+all_fig3_bok <- all_fig3_bok[!grepl("Hyloscirtus", all_fig3_bok$Genera),]
+all_fig3_bok <- all_fig3_bok[!grepl("Myersiohyla", all_fig3_bok$Genera),]
+all_fig3_bok <- all_fig3_bok[!grepl("Nesorohyla", all_fig3_bok$Genera),]
+
+# Linear Regression
+all_lm_bok = lm(log_DF ~ log_SDI, all_fig3_bok)
+summary(all_lm_bok)
+
+#Plot
+all.bok.plot = ggplot(all_fig3_bok, aes(x=log_SDI, y=log_DF))+
+  geom_point() +
+  geom_smooth(method=lm)+
+  theme_bw() + 
+  xlab("\nSSD") +
+  ylab("DF (Hz)\n")+
+  ggtitle("Bokermannohyla")+
+  theme(plot.title = element_text(hjust=0.5), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  annotate("text", 
+           label="p = 0.0176*," ~ R^2 ~ "= 0.275", 
+           x=-0.08, 
+           y=3.4, 
+           size = 3, 
+           color='gray')
+all.bok.plot
+ggsave(filename="_1_bok_allspecies_fig3.jpg", plot=last_plot())
+```
+
+Only Aplastodiscus: DF ~ SDI + habitat (without phylogeny)
+```{r}
+# Load matrix
+all_fig3 <- read.csv("S4.csv",header=TRUE, sep=",",row.names=1)
+# Dataset with DF and SDI
+all_fig3<-all_fig3[,c(2,5,19)]
+# Remove missing data 
+all_fig3_aplas<-all_fig3 %>% drop_na(log_DF,log_SDI)
+# Remove other genera
+all_fig3_aplas <- all_fig3_aplas[!grepl("Bokermannohyla", all_fig3_aplas$Genera),]
+all_fig3_aplas <- all_fig3_aplas[!grepl("Boana", all_fig3_aplas$Genera),]
+all_fig3_aplas <- all_fig3_aplas[!grepl("Hyloscirtus", all_fig3_aplas$Genera),]
+all_fig3_aplas <- all_fig3_aplas[!grepl("Myersiohyla", all_fig3_aplas$Genera),]
+all_fig3_aplas <- all_fig3_aplas[!grepl("Nesorohyla", all_fig3_aplas$Genera),]
+
+# Linear Regression
+all_lm_aplas = lm(log_DF ~ log_SDI, all_fig3_aplas)
+summary(all_lm_aplas)
+
+#Plot
+all.aplas.plot = ggplot(all_fig3_aplas, aes(x=log_SDI, y=log_DF))+
+  geom_point() +
+  geom_smooth(method=lm)+
+  theme_bw() + 
+  xlab("\nSSD") +
+  ylab("DF (Hz)\n")+
+  ggtitle("Aplastodiscus")+
+  theme(plot.title = element_text(hjust=0.5), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  annotate("text", 
+           label="p = 8.21e-08***," ~ R^2 ~ "= 0.1537", 
+           x=0.012, 
+           y=3.55, 
+           size = 3, 
+           color='gray')
+all.aplas.plot
+ggsave(filename="_1_aplas_allspecies_fig3.jpg", plot=last_plot())
+```
+
+Only Boana: DF ~ SDI + habitat (without phylogeny)
+
+```{r}
+# Load matrix
+all_fig3 <- read.csv("S4.csv",header=TRUE, sep=",",row.names=1)
+# Dataset with DF and SDI
+all_fig3<-all_fig3[,c(2,5,19)]
+# Remove missing data 
+all_fig3_boa <-all_fig3 %>% drop_na(log_DF,log_SDI)
+# Remove other genera
+all_fig3_boa <- all_fig3_boa[!grepl("Bokermannohyla", all_fig3_boa$Genera),]
+all_fig3_boa <- all_fig3_boa[!grepl("Aplastodiscus", all_fig3_boa$Genera),]
+all_fig3_boa <- all_fig3_boa[!grepl("Hyloscirtus", all_fig3_boa$Genera),]
+all_fig3_boa <- all_fig3_boa[!grepl("Myersiohyla", all_fig3_boa$Genera),]
+all_fig3_boa <- all_fig3_boa[!grepl("Nesorohyla", all_fig3_boa$Genera),]
+
+# Linear Regression
+all_lm_boa = lm(log_DF ~ log_SDI, all_fig3_boa)
+summary(all_lm_boa)
+
+#Plot
+all.boa.plot = ggplot(all_fig3_boa, aes(x=log_SDI, y=log_DF))+
+  geom_point() +
+  geom_smooth(method=lm)+
+  theme_bw() + 
+  xlab("\nSSD") +
+  ylab("DF (Hz)\n")+
+  ggtitle("Boana")+
+  theme(plot.title = element_text(hjust=0.5), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  annotate("text", 
+           label="p = 0.0705," ~ R^2 ~ "= 0.0435", 
+           x=-0.061, 
+           y=3.7, 
+           size = 3, 
+           color='gray')
+all.boa.plot
+ggsave(filename="_1_boa_allspecies_fig3.jpg", plot=last_plot())
+```
+
+## 5.6 Correlated Evolution using Pagel's Method
+
+Using Pagel's (1994) method to test association between two binary variables. Obs. Categorical_DF = midpoint separated per genus; Categorical_DF_2 = midpoint from all species 
+
+First, lets perform Pagel's method to test the correlation between DF and habitat
+```{r}
+# Load matrix
+anura.data.pagel <- read.csv("S4_without_ambiguous.csv",header=TRUE, sep=",",row.names=1)
+# Dataset with DF, SVL, SDI and calling place data
+anura.data.pagel<-anura.data.pagel[,c(1,21,22)]
+# Remove missing data 
+anura.data.pagel<-anura.data.pagel %>% drop_na(Calling_place, Categorical_DF, Categorical_DF_2) 
+# Pull out the characters as vectors
+pagelHabitat = setNames(anura.data.pagel$Calling_place,rownames(anura.data.pagel))
+pagelDF = setNames(anura.data.pagel$Categorical_DF,rownames(anura.data.pagel))
+pagelDF_2 = setNames(anura.data.pagel$Categorical_DF_2,rownames(anura.data.pagel))
+
+# Load tree
+obj.DF.pagel = name.check(treeultra,pagelDF)
+tree.cut.DF.pagel = drop.tip(treeultra,obj.DF.pagel$tree_not_data) #prune tips without DF data
+obj.habitat.pagel1 = name.check(tree.cut.DF.pagel, pagelHabitat)
+tree.cut.habitat_DF.pagel = drop.tip(tree.cut.DF.pagel, obj.habitat.pagel1$tree_not_data) #prune tips without DF data
+name.check(tree.cut.habitat_DF.pagel,obj.habitat.pagel1)
+
+# Tree visualization
+par(mfrow=c(1,2))
+plot(tree.cut.habitat_DF.pagel,show.tip.label=FALSE,no.margin=TRUE)
+par(fg="transparent")
+tiplabels(pie=to.matrix(pagelDF[tree.cut.habitat_DF.pagel$tip.label],c("high_DF", "low_DF")), piecol = c("blue", "red"), cex=0.2)
+par(fg="black")
+add.simmap.legend(colors=setNames(c("blue", "red"), c("high DF(esquerda)/lotic(direita)", "low DF(esquerda)/lentic(direita)")), prompt=FALSE, x=0, y=10, fsize=0.6)
+par(fg="transparent")
+plot(tree.cut.habitat_DF.pagel,show.tip.label=FALSE,no.margin=TRUE,direction="leftwards")
+tiplabels(pie=to.matrix(pagelHabitat[tree.cut.habitat_DF.pagel$tip.label],c("lentic","lotic")), piecol=c("red", "blue"), cex=0.2)
+
+# Pagel's Method (p = 0.42)
+fit.habitat_DF = fitPagel(tree.cut.habitat_DF.pagel,pagelHabitat,pagelDF)
+fit.habitat_DF
+plot (fit.habitat_DF, lwd.by.rate=TRUE)
+```
+
+Secondly, lets perform Pagel's metod to test the correlation between SSD and habitat
+```{r}
+# Load matrix
+anura.data.pagel2 <- read.csv("S4_without_ambiguous.csv",header=TRUE, sep=",",row.names=1)
+# Dataset with DF, SVL, SDI and calling place data
+anura.data.pagel2<-anura.data.pagel2[,c(1,20)]
+# Remove missing data 
+anura.data.pagel2<-anura.data.pagel2 %>% drop_na(Categorical_SSD, Calling_place) 
+# Pull out the characters as vectors
+pagelSSD = setNames(anura.data.pagel2$Categorical_SSD,rownames(anura.data.pagel2))
+pagelHabitat = setNames(anura.data.pagel2$Calling_place,rownames(anura.data.pagel2))
+
+# Load tree
+obj.SSD.pagel = name.check(treeultra,pagelSSD)
+tree.cut.SSD.pagel = drop.tip(treeultra,obj.SSD.pagel$tree_not_data) #prune tips without SSD data
+obj.habitat.pagel = name.check(tree.cut.SSD.pagel, pagelHabitat)
+tree.cut.habitat_SSD.pagel = drop.tip(tree.cut.SSD.pagel, obj.habitat.pagel$tree_not_data) #prune tips without DF data
+name.check(tree.cut.habitat_SSD.pagel,obj.habitat.pagel)
+
+# Tree visualization
+par(mfrow=c(1,2))
+plot(tree.cut.habitat_SSD.pagel,show.tip.label=FALSE,no.margin=TRUE)
+par(fg="transparent")
+tiplabels(pie=to.matrix(pagelSSD[tree.cut.habitat_SSD.pagel$tip.label],c("female_SSD", "male_SSD")), piecol = c("blue", "red"), cex=0.2)
+par(fg="black")
+add.simmap.legend(colors=setNames(c("blue", "red"), c("female SSD(esquerda)/lotic(direita)", "male SSD(esquerda)/lentic(direita)")), prompt=FALSE, x=0, y=10, fsize=0.6)
+par(fg="transparent")
+plot(tree.cut.habitat_SSD.pagel,show.tip.label=FALSE,no.margin=TRUE,direction="leftwards")
+tiplabels(pie=to.matrix(pagelHabitat[tree.cut.habitat_SSD.pagel$tip.label],c("lentic","lotic")), piecol=c("red", "blue"), cex=0.2)
+
+# Pagel's Method (p = 0.48)
+fit.habitat_SSD = fitPagel(tree.cut.habitat_SSD.pagel,pagelHabitat,pagelSSD)
+fit.habitat_SSD
+plot (fit.habitat_SSD, lwd.by.rate=TRUE)
+```
+
+## 6. References
+
+Blomberg, S. P., T. Garland Jr., and A. R. Ives. 2003. Testing for phylogenetic signal in comparative data: behavioral traits are more labile. Evolution 57:717–745.
+
+Butler MA and AA King, 2004. Phylogenetic comparative analysis: a modeling approach for adaptive evolution. American Naturalist 164:683-695.
+
+de Sá, F. P., Haddad, C. F., Gray, M. M., Verdade, V. K., Thomé, M. T. C., Rodrigues, M. T., & Zamudio, K. R. (2020). Male‐male competition and repeated evolution of terrestrial breeding in Atlantic Coastal Forest frogs. Evolution, 74(2), 459-475.
+
+Felsenstein J. 1973. Maximum likelihood estimation of evolutionary trees from continuous characters. American Journal of Human Genetics 25:471-492.
+
+Fritz, S. A., and A. Purvis. 2010. Selectivity in Mammalian Extinction Risk and Threat Types: a New Measure of Phylogenetic Signal Strength in Binary Traits. Conservation Biology 24:1042-1051.
+
+Hansen, T. F., and E. P. Martins. 1996. Translating between microevolutionary process and macroevolutionary patterns: The correlation structure of interspecific data. Evolution 50:1404–1417.
+
+Harmon LJ et al. 2010. Early bursts of body size and shape evolution are rare in comparative data. Evolution 64:2385-2396.
+
+Lyra, M.L., Lourenco, A.C., Pinheiro, P.D.P., Pezutti, T.L., Ba^eta, D., Barlow, A., Hofreiter, M., Pombal, J.P. Jr., Haddad, C.F.B. and Faivovich, J., 2020. High throughput DNA sequencing of museum specimens sheds light on the long missing species of the Bokermannohyla claresignata group (Anura: Hylidae: Cophomantini). Zool. J. Linn. Soc.
+
+Orme, D., Freckleton, R., Thomas, G., Petzoldt, T., & Fritz, S. (2013). The caper package: comparative analysis of phylogenetics and evolution in R. R package version, 5(2), 1-36.
+
+Pagel M. 1997. Inferring evolutionary processes from phylogenies. Zoologica Scripta 26:331–348.
+
+Pagel, M. 1999. Inferring the historical patterns of biological evolution. Nature 401:877–884.
+
+REVELL, Liam. 2018. Models of continuous character evolution. Available at: <http://phytools.org/mexico2018/ex/5/Cont-char-models.html>
+
+Röhr, D. L., Paterno, G. B., Camurugi, F., Juncá, F. A., & Garda, A. A. (2016). Background noise as a selective pressure: stream-breeding anurans call at higher frequencies. Organisms Diversity & Evolution, 16(1), 269-273.
+
+Simpson, G. G. 1945. Tempo and mode in evolution. Trans. N. Y. Acad. Sci. 8:45–60.
+
+Symonds, M. R., & Blomberg, S. P. (2014). A primer on phylogenetic generalised least squares. In Modern phylogenetic comparative methods and their application in evolutionary biology (pp. 105-130). Springer, Berlin, Heidelberg.
+
+Womack, M. C., & Bell, R. C. (2020). 200 million years of anuran body size evolution in relation to geography, ecology, and life history. Journal of Evolutionary Biology.
+
+Yoder, J. B., E. Clancey, S. Des Roches, J. M. Eastman, L. Gentry, W. Godsoe, T. J. Hagey, D. Jochimsen, B. P. Oswald, J. Robertson, and Others. 2010. Ecological opportunity and the origin of adaptive radiations. J. Evol. Biol. 23:1581–1596. Blackwell Publishing Ltd.
+
+
+
+
+
