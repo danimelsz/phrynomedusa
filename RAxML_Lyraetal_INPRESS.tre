@@ -1,0 +1,230 @@
+#NEXUS
+begin taxa;
+	dimensions ntax=136;
+	taxlabels
+	Acris_crepitans
+	Aplastodiscus_albofrenatus
+	Aplastodiscus_albosignatus
+	Aplastodiscus_arildae
+	Aplastodiscus_cavicola
+	Aplastodiscus_cochranae
+	Aplastodiscus_ehrhardti
+	Aplastodiscus_eugenioi
+	Aplastodiscus_flumineus
+	Aplastodiscus_ibirapitanga
+	Aplastodiscus_leucopygius
+	Aplastodiscus_lutzorum
+	Aplastodiscus_perviridis
+	Aplastodiscus_sibilatus
+	Aplastodiscus_weygoldti
+	Boana_claresignata
+	Boana_aguilari
+	Boana_albomarginata
+	Boana_albopunctata
+	Boana_alfaroi
+	Boana_almendarizae
+	Boana_balzani
+	Boana_bischoffi
+	Boana_boans
+	Boana_caingua
+	Boana_caipora
+	Boana_calcarata
+	Boana_callipleura
+	Boana_appendiculata
+	Boana_candidateS1
+	Boana_candidateS2
+	Boana_candidateS3
+	Boana_gracilis
+	Boana_cladoG
+	Boana_courtoisae
+	Boana_cladoI
+	Boana_steinbachi
+	Boana_cladoK
+	Boana_cordobae
+	Boana_crepitans
+	Boana_curupi
+	Boana_dentei
+	Boana_diabolica
+	Boana_ericae
+	Boana_exastis
+	Boana_faber
+	Boana_fasciata
+	Boana_geographica
+	Boana_gladiator
+	Boana_guentheri
+	Boana_heilprini
+	Boana_ventrimaculata
+	Boana_icamiaba
+	Boana_joaquini
+	Boana_lanciformis
+	Boana_polytaenia_2
+	Boana_lemai
+	Boana_leptolineata
+	Boana_lundii
+	Boana_maculateralis
+	Boana_marginata
+	Boana_marianitae
+	Boana_melanopleura
+	Boana_microderma
+	Boana_multifasciata
+	Boana_nympha
+	Boana_ornatissima
+	Boana_palaestes
+	Boana_pardalis
+	Boana_pellucens
+	Boana_picturata
+	Boana_polytaenia
+	Boana_pombali
+	Boana_prasina
+	Boana_pugnax
+	Boana_pulchella
+	Boana_punctata
+	Boana_raniceps
+	Boana_riojana
+	Boana_roraima
+	Boana_rosenbergi
+	Boana_rufitela
+	Boana_secedens
+	Boana_semiguttata
+	Boana_semilineata
+	Boana_sibleszi
+	Boana_sp
+	Boana_tepuiana
+	Boana_tetete
+	Boana_wavrini
+	Boana_xerophylla
+	Bokermannohyla_astartea
+	Bokermannohyla_circumdata
+	Bokermannohyla_hylax
+	Bokermannohyla_itapoty
+	Bokermannohyla_martinsi
+	Bokermannohyla_oxente
+	Bokermannohyla_sp1
+	Bokermannohyla_sp2
+	Dendropsophus_nanus
+	Hyla_cinerea
+	Hyloscirtus_alytolylax
+	Hyloscirtus_armatus
+	Hyloscirtus_callipeza
+	Hyloscirtus_charazani
+	Hyloscirtus_colymba
+	Hyloscirtus_condor
+	Hyloscirtus_criptico
+	Hyloscirtus_hillisi
+	Hyloscirtus_jahni
+	Hyloscirtus_japreria
+	Hyloscirtus_larinopygion
+	Hyloscirtus_lascinius
+	Hyloscirtus_lindae
+	Hyloscirtus_mashpi
+	Hyloscirtus_pacha
+	Hyloscirtus_palmeri
+	Hyloscirtus_pantostictus
+	Hyloscirtus_phyllognathus
+	Hyloscirtus_platydactylus
+	Hyloscirtus_princecharlesi
+	Hyloscirtus_psarolaimus
+	Hyloscirtus_ptychodactylus
+	Hyloscirtus_simmonsi
+	Hyloscirtus_staufferorum
+	Hyloscirtus_tapichalaca
+	Hyloscirtus_tigrinus
+	Myersiohyla_chamaeleo
+	Myersiohyla_liliae
+	Myersiohyla_neblinaria
+	Nesorohyla_kanaima
+	Phrynomedusa_dryade
+	Phyllodytes_luteolus
+	Pseudis_minuta
+	Scinax_staufferi
+	Trachycephalus_typhonius
+;
+end;
+
+begin trees;
+	tree tree_1 = [&R] ((Scinax_staufferi:0.360751,(((Trachycephalus_typhonius:0.096738,Phyllodytes_luteolus:0.257235)[&bubu=100]:0.058463,(Dendropsophus_nanus:0.261999,(Pseudis_minuta:0.279906,(Acris_crepitans:0.247211,Hyla_cinerea:0.225708)[&bubu=100,!rotate=true]:0.07321)[&bubu=60]:0.019424)[&bubu=56]:0.020613)[&bubu=39]:0.023963,(((Myersiohyla_chamaeleo:0.217646,Myersiohyla_liliae:0.149541)[&bubu=99,!rotate=true]:0.062544,Myersiohyla_neblinaria:0.202092)[&bubu=100,!rotate=true]:0.063831,(((((Bokermannohyla_oxente:0.160842,Bokermannohyla_itapoty:0.155426)[&bubu=87,!rotate=true]:0.034954,(Bokermannohyla_martinsi:0.059604,(Bokermannohyla_astartea:0.050633,(Bokermannohyla_sp2:0.021052,((Bokermannohyla_hylax:0.01218,Bokermannohyla_sp1:0.010915)[&bubu=37,!rotate=true]:0.002329,Bokermannohyla_circumdata:0.014771)[&bubu=75,!rotate=true]:0.008265)[&bubu=100]:0.025285)[&bubu=100]:0.041953)[&bubu=100]:0.06144)[&bubu=100]:0.102315,((((Boana_roraima:0.11767,(Boana_microderma:0.077501,Boana_nympha:0.079368)[&bubu=100]:0.061985)[&bubu=96]:0.028303,(Boana_sp:0.116549,(Boana_ornatissima:0.22025,(Boana_lemai:0.045166,Boana_tepuiana:0.057399)[&bubu=100]:0.068188)[&bubu=93]:0.039424)[&bubu=96]:0.02024)[&bubu=99]:0.023762,(((((Boana_raniceps:0.086706,((Boana_lanciformis:0.048486,(Boana_multifasciata:0.04188,Boana_albopunctata:0.03207)[&bubu=100,!rotate=true]:0.026071)[&bubu=100]:0.021124,(((Boana_cladoK:0.049934,Boana_maculateralis:0.061551)[&bubu=98]:0.07512,(Boana_calcarata:0.043319,(Boana_fasciata:0.037764,Boana_almendarizae:0.027849)[&bubu=40,!rotate=true]:0.006084)[&bubu=99]:0.025386)[&bubu=84]:0.018165,(Boana_dentei:0.136862,((Boana_alfaroi:0.027758,Boana_tetete:0.023876)[&bubu=68,!rotate=true]:0.010117,(((Boana_courtoisae:0.019918,Boana_cladoI:0.033333)[&bubu=94]:0.025431,Boana_steinbachi:0.01999)[&bubu=82,!rotate=true]:0.012905,Boana_cladoG:0.0479)[&bubu=33,!rotate=true]:0.007725)[&bubu=88]:0.040988)[&bubu=80]:0.024254)[&bubu=92]:0.025103)[&bubu=95]:0.028825)[&bubu=100]:0.058873,Boana_heilprini:0.144213)[&bubu=93,!rotate=true]:0.025016,(((((((((Boana_polytaenia:0.003853,Boana_polytaenia_2:7.53E-4)[&bubu=100,!rotate=true]:0.047413,Boana_leptolineata:0.052576)[&bubu=86,!rotate=true]:0.011917,((Boana_joaquini:0.012109,Boana_curupi:0.020504)[&bubu=100]:0.017671,(Boana_caipora:0.026628,Boana_semiguttata:0.02377)[&bubu=100,!rotate=true]:0.017081)[&bubu=100]:0.022555)[&bubu=91]:0.013318,((Boana_riojana:0.030467,(Boana_marianitae:0.038459,Boana_callipleura:0.027871)[&bubu=100,!rotate=true]:0.00868)[&bubu=100]:0.014452,((Boana_guentheri:0.057904,(Boana_marginata:0.031993,Boana_bischoffi:0.023789)[&bubu=98,!rotate=true]:0.011754)[&bubu=80]:0.006496,(Boana_caingua:0.055642,((Boana_pulchella:0.036171,Boana_cordobae:0.021201)[&bubu=100,!rotate=true]:0.019116,Boana_prasina:0.037795)[&bubu=100,!rotate=true]:0.019358)[&bubu=90]:0.00793)[&bubu=96]:0.010784)[&bubu=96]:0.023547)[&bubu=79]:0.006503,((Boana_balzani:0.040189,Boana_melanopleura:0.054507)[&bubu=65]:0.00977,((Boana_aguilari:0.009592,Boana_palaestes:0.014019)[&bubu=98]:0.016348,Boana_gladiator:0.027731)[&bubu=100,!rotate=true]:0.040544)[&bubu=70]:0.015374)[&bubu=76,!rotate=true]:0.013537,Boana_ericae:0.087883)[&bubu=86,!rotate=true]:0.025165,Boana_claresignata:0.139086)[&bubu=98,!rotate=true]:0.032764,(((Boana_pugnax:0.063047,(Boana_rosenbergi:0.120942,(Boana_xerophylla:0.030645,Boana_crepitans:0.063014)[&bubu=77]:0.019493)[&bubu=92]:0.028065)[&bubu=95]:0.038688,(Boana_faber:0.070967,((Boana_exastis:0.046945,Boana_pardalis:0.033609)[&bubu=99,!rotate=true]:0.027685,Boana_lundii:0.059204)[&bubu=100,!rotate=true]:0.029937)[&bubu=100]:0.024813)[&bubu=72,!rotate=true]:0.013032,Boana_albomarginata:0.122702)[&bubu=94,!rotate=true]:0.020057)[&bubu=94,!rotate=true]:0.019636,(Boana_pellucens:0.021597,Boana_rufitela:0.030379)[&bubu=100]:0.153196)[&bubu=95,!rotate=true]:0.020974)[&bubu=48,!rotate=false]:0.015775,(Boana_picturata:0.193384,(Boana_punctata:0.117792,Boana_gracilis:0.090736)[&bubu=100,!rotate=true]:0.145829)[&bubu=36]:0.021962)[&bubu=36,!rotate=true]:0.007207,(((Boana_secedens:0.133447,Boana_pombali:0.057895)[&bubu=98,!rotate=true]:0.090668,((((Boana_geographica:0.027599,(Boana_diabolica:0.050153,Boana_appendiculata:0.049428)[&bubu=43,!rotate=true]:0.001979)[&bubu=73]:0.01438,(Boana_candidateS3:0.017305,(Boana_ventrimaculata:0.050231,(Boana_candidateS1:0.024404,(Boana_candidateS2:0.048196,Boana_semilineata:0.007848)[&bubu=50,!rotate=true]:0.00822)[&bubu=25]:1.0E-6)[&bubu=20]:0.006477)[&bubu=77]:0.038296)[&bubu=51]:0.026861,(Boana_boans:0.045926,Boana_wavrini:0.099641)[&bubu=33]:0.016258)[&bubu=90]:0.051803,Boana_icamiaba:0.066165)[&bubu=75,!rotate=true]:0.032234)[&bubu=97]:0.0528,Boana_sibleszi:0.146963)[&bubu=33,!rotate=true]:0.010603)[&bubu=47,!rotate=true]:0.01073)[&bubu=99]:0.022873,(Aplastodiscus_sibilatus:0.175119,((Aplastodiscus_ehrhardti:0.086767,((Aplastodiscus_albofrenatus:0.037615,Aplastodiscus_eugenioi:0.022857)[&bubu=100,!rotate=true]:0.0421,(Aplastodiscus_weygoldti:0.024404,Aplastodiscus_arildae:0.024481)[&bubu=100,!rotate=true]:0.043955)[&bubu=100]:0.029397)[&bubu=100]:0.078027,((Aplastodiscus_cochranae:0.022202,(Aplastodiscus_perviridis:0.041277,Aplastodiscus_lutzorum:0.055271)[&bubu=63]:0.006704)[&bubu=100]:0.040746,(Aplastodiscus_ibirapitanga:0.06264,((Aplastodiscus_flumineus:0.019242,Aplastodiscus_albosignatus:0.020359)[&bubu=100]:0.019451,(Aplastodiscus_leucopygius:0.023845,Aplastodiscus_cavicola:0.025186)[&bubu=100]:0.02315)[&bubu=87]:0.008606)[&bubu=100]:0.027483)[&bubu=100]:0.081355)[&bubu=99]:0.033324)[&bubu=100]:0.046749)[&bubu=91,!rotate=true]:0.019574)[&bubu=100]:0.054533,(Hyloscirtus_jahni:0.25683,((((Hyloscirtus_phyllognathus:0.189466,((Hyloscirtus_alytolylax:0.023702,(Hyloscirtus_simmonsi:0.042597,Hyloscirtus_mashpi:0.050875)[&bubu=75]:0.015439)[&bubu=100]:0.139702,Hyloscirtus_colymba:0.203868)[&bubu=99,!rotate=true]:0.043497)[&bubu=30]:0.007461,(Hyloscirtus_palmeri:0.190271,Hyloscirtus_lascinius:0.127951)[&bubu=39,!rotate=true]:0.018162)[&bubu=49,!rotate=true]:0.015246,(Hyloscirtus_platydactylus:0.029759,(Hyloscirtus_callipeza:0.026459,Hyloscirtus_japreria:0.026056)[&bubu=60,!rotate=true]:0.006816)[&bubu=100,!rotate=false]:0.09778)[&bubu=100,!rotate=true]:0.061122,((Hyloscirtus_charazani:0.042435,Hyloscirtus_armatus:0.041437)[&bubu=100,!rotate=true]:0.111024,(((Hyloscirtus_hillisi:0.031035,Hyloscirtus_tapichalaca:0.028005)[&bubu=86,!rotate=true]:0.01221,Hyloscirtus_condor:0.02511)[&bubu=100,!rotate=true]:0.093983,(((Hyloscirtus_tigrinus:0.022403,((Hyloscirtus_criptico:0.023757,(Hyloscirtus_staufferorum:0.012052,Hyloscirtus_pacha:0.012588)[&bubu=100]:0.015785)[&bubu=90]:0.008865,Hyloscirtus_psarolaimus:0.033032)[&bubu=88,!rotate=true]:0.004852)[&bubu=96]:0.01159,(Hyloscirtus_ptychodactylus:0.007527,Hyloscirtus_princecharlesi:0.011319)[&bubu=100]:0.01818)[&bubu=92,!rotate=true]:0.008818,((Hyloscirtus_pantostictus:0.008978,Hyloscirtus_lindae:0.010639)[&bubu=100]:0.02604,Hyloscirtus_larinopygion:0.0273)[&bubu=58,!rotate=true]:0.007814)[&bubu=100,!rotate=true]:0.082878)[&bubu=99]:0.027463)[&bubu=85]:0.031109)[&bubu=56]:0.015668)[&bubu=100]:0.054959)[&bubu=100,!rotate=true]:0.029361,Nesorohyla_kanaima:0.235637)[&bubu=77,!rotate=true]:0.016662)[&bubu=100,!rotate=false]:0.054933)[&bubu=36,!rotate=false]:0.031074):0.194764,Phrynomedusa_dryade:0.194764)[&!rotate=true];
+end;
+
+begin figtree;
+	set appearance.backgroundColorAttribute="Default";
+	set appearance.backgroundColour=#ffffff;
+	set appearance.branchColorAttribute="User selection";
+	set appearance.branchColorGradient=false;
+	set appearance.branchLineWidth=3.0;
+	set appearance.branchMinLineWidth=0.0;
+	set appearance.branchWidthAttribute="Fixed";
+	set appearance.foregroundColour=#000000;
+	set appearance.hilightingGradient=false;
+	set appearance.selectionColour=#2d3680;
+	set branchLabels.colorAttribute="User selection";
+	set branchLabels.displayAttribute="Branch times";
+	set branchLabels.fontName="sansserif";
+	set branchLabels.fontSize=8;
+	set branchLabels.fontStyle=0;
+	set branchLabels.isShown=false;
+	set branchLabels.significantDigits=4;
+	set layout.expansion=837;
+	set layout.layoutType="RECTILINEAR";
+	set layout.zoom=0;
+	set legend.attribute="bubu";
+	set legend.fontSize=10.0;
+	set legend.isShown=false;
+	set legend.significantDigits=4;
+	set nodeBars.barWidth=4.0;
+	set nodeBars.displayAttribute=null;
+	set nodeBars.isShown=false;
+	set nodeLabels.colorAttribute="User selection";
+	set nodeLabels.displayAttribute="bubu";
+	set nodeLabels.fontName="sansserif";
+	set nodeLabels.fontSize=12;
+	set nodeLabels.fontStyle=0;
+	set nodeLabels.isShown=true;
+	set nodeLabels.significantDigits=4;
+	set nodeShape.colourAttribute="User selection";
+	set nodeShape.isShown=false;
+	set nodeShape.minSize=10.0;
+	set nodeShape.scaleType=Width;
+	set nodeShape.shapeType=Circle;
+	set nodeShape.size=4.0;
+	set nodeShape.sizeAttribute="Fixed";
+	set polarLayout.alignTipLabels=false;
+	set polarLayout.angularRange=0;
+	set polarLayout.rootAngle=0;
+	set polarLayout.rootLength=100;
+	set polarLayout.showRoot=true;
+	set radialLayout.spread=0.0;
+	set rectilinearLayout.alignTipLabels=false;
+	set rectilinearLayout.curvature=0;
+	set rectilinearLayout.rootLength=100;
+	set scale.offsetAge=0.0;
+	set scale.rootAge=1.0;
+	set scale.scaleFactor=1.0;
+	set scale.scaleRoot=false;
+	set scaleAxis.automaticScale=true;
+	set scaleAxis.fontSize=8.0;
+	set scaleAxis.isShown=false;
+	set scaleAxis.lineWidth=1.0;
+	set scaleAxis.majorTicks=1.0;
+	set scaleAxis.origin=0.0;
+	set scaleAxis.reverseAxis=false;
+	set scaleAxis.showGrid=true;
+	set scaleBar.automaticScale=true;
+	set scaleBar.fontSize=10.0;
+	set scaleBar.isShown=true;
+	set scaleBar.lineWidth=1.0;
+	set scaleBar.scaleRange=0.0;
+	set tipLabels.colorAttribute="User selection";
+	set tipLabels.displayAttribute="Names";
+	set tipLabels.fontName="sansserif";
+	set tipLabels.fontSize=13;
+	set tipLabels.fontStyle=0;
+	set tipLabels.isShown=true;
+	set tipLabels.significantDigits=4;
+	set trees.order=false;
+	set trees.orderType="increasing";
+	set trees.rooting=false;
+	set trees.rootingType="User Selection";
+	set trees.transform=false;
+	set trees.transformType="cladogram";
+end;
+

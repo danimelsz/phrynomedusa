@@ -1,0 +1,179 @@
+#NEXUS
+[R-package APE, Fri Jan 22 09:34:19 2021]
+
+BEGIN TAXA;
+	DIMENSIONS NTAX = 83;
+	TAXLABELS
+		Aplastodiscus_ehrhardti_CFBHt11191
+		Aplastodiscus_eugenioi_CFBH5915
+		Aplastodiscus_arildae_USNM303022
+		Aplastodiscus_ibirapitanga_MNRJ51863
+		Aplastodiscus_albosignatus_MZUSPf1451
+		Aplastodiscus_cochranae_CFBH3001
+		Aplastodiscus_lutzorum_BB49
+		Aplastodiscus_perviridis_MACN37791
+		Bclaresignata_clean_april2019
+		Boana_ericae_CFBH3599
+		Boana_gladiator_MNCN5207
+		Boana_aguilari_MTD45203
+		Boana_palaestes_MNCN23199
+		Boana_balzani_MNCN543
+		Boana_melanopleura_MTD46350
+		Boana_guentheri_CFBH3386
+		Boana_caingua_MLPDB1084
+		Boana_prasina_CFBH3388
+		Boana_cordobae_MACN37692
+		Boana_pulchella_MACN37788
+		Boana_riojana_MACN37509
+		Boana_marianitae_MV0249
+		Boana_caipora_CFBH5738
+		Boana_semiguttata_CFBH3579
+		Boana_curupi_MACN37794
+		Boana_joaquini_CFBH3625
+		Boana_polytaenia_CFBH5752
+		Boana_albomarginata_USNM284519
+		Boana_rosenbergi_KU217629
+		Boana_crepitans_CFBH2966
+		Boana_xerophylla_552PG
+		Boana_faber_MACN37000
+		Boana_lundii_CFBH4000
+		Boana_exastis_MTR16289
+		Boana_pardalis_USNM303046
+		Boana_heilprini_AMNHA168405
+		Boana_pellucens_KU202734
+		Boana_rufitela_KRL798
+		Boana_raniceps_MACN37795
+		Boana_lanciformis_MJH564
+		Boana_albopunctata_ZUEC12053
+		Boana_dentei_13mc
+		Boana_alfaroi_QCAZ44858
+		Boana_tetete_QCAZ40081
+		Boana_fasciata_QCAZ17030
+		Boana_almendarizae_QCAZ39650
+		Boana_calcarata_QCAZ44177
+		Boana_maculateralis_NMP6V71250
+		Boana_sibleszi_ROM39561
+		Boana_icamiaba_MPEG_27246
+		Boana_boans_RWM17746
+		Boana_wavrini_MPEG_33741
+		Boana_geographica_MPEG40274
+		Boana_diabolica_R152
+		Boana_pombali_2034
+		Boana_gracilis_MAD085
+		Boana_punctata_MACN37792
+		Boana_lemai_ROM39570
+		Boana_tepuiana_USNM302435
+		Boana_roraima_ROM39624
+		Bokermannohyla_circumdata_CFBH3621
+		Bokermannohyla_hylax_USNM303036
+		Bokermannohyla_itapoty_CFBH5652
+		Bokermannohyla_oxente_CFBH5642
+		Hyloscirtus_phyllognathus_QCAZ41032
+		Hyloscirtus_colymba_SIUCH7079
+		Hyloscirtus_alytolylax_QCAZ24377
+		Hyloscirtus_mashpi_MZUTI610
+		Hyloscirtus_simmonsi_KU181167
+		Hyloscirtus_japreria_MHNLS19234
+		Hyloscirtus_platydactylus_voucher_MHNLS20326
+		Hyloscirtus_palmeri_SIUCH6924
+		Hyloscirtus_armatus_AMNHA165163
+		Hyloscirtus_tapichalaca_QCAZ16704
+		Hyloscirtus_larinopygion_QCAZ41826
+		Hyloscirtus_psarolaimus_QCAZ27049
+		Hyloscirtus_criptico_QCAZ45466
+		Hyloscirtus_pacha_KU202760
+		Hyloscirtus_staufferorum_QCAZ45967
+		Hyloscirtus_pantostictus_QCAZ45438
+		Nesorohyla_kanaima_ROM39582
+		Myersiohyla_neblinaria_USNM562071
+		Myersiohyla_chamaeleo_USNM562057
+	;
+END;
+BEGIN TREES;
+	TRANSLATE
+		1	Aplastodiscus_ehrhardti_CFBHt11191,
+		2	Aplastodiscus_eugenioi_CFBH5915,
+		3	Aplastodiscus_arildae_USNM303022,
+		4	Aplastodiscus_ibirapitanga_MNRJ51863,
+		5	Aplastodiscus_albosignatus_MZUSPf1451,
+		6	Aplastodiscus_cochranae_CFBH3001,
+		7	Aplastodiscus_lutzorum_BB49,
+		8	Aplastodiscus_perviridis_MACN37791,
+		9	Bclaresignata_clean_april2019,
+		10	Boana_ericae_CFBH3599,
+		11	Boana_gladiator_MNCN5207,
+		12	Boana_aguilari_MTD45203,
+		13	Boana_palaestes_MNCN23199,
+		14	Boana_balzani_MNCN543,
+		15	Boana_melanopleura_MTD46350,
+		16	Boana_guentheri_CFBH3386,
+		17	Boana_caingua_MLPDB1084,
+		18	Boana_prasina_CFBH3388,
+		19	Boana_cordobae_MACN37692,
+		20	Boana_pulchella_MACN37788,
+		21	Boana_riojana_MACN37509,
+		22	Boana_marianitae_MV0249,
+		23	Boana_caipora_CFBH5738,
+		24	Boana_semiguttata_CFBH3579,
+		25	Boana_curupi_MACN37794,
+		26	Boana_joaquini_CFBH3625,
+		27	Boana_polytaenia_CFBH5752,
+		28	Boana_albomarginata_USNM284519,
+		29	Boana_rosenbergi_KU217629,
+		30	Boana_crepitans_CFBH2966,
+		31	Boana_xerophylla_552PG,
+		32	Boana_faber_MACN37000,
+		33	Boana_lundii_CFBH4000,
+		34	Boana_exastis_MTR16289,
+		35	Boana_pardalis_USNM303046,
+		36	Boana_heilprini_AMNHA168405,
+		37	Boana_pellucens_KU202734,
+		38	Boana_rufitela_KRL798,
+		39	Boana_raniceps_MACN37795,
+		40	Boana_lanciformis_MJH564,
+		41	Boana_albopunctata_ZUEC12053,
+		42	Boana_dentei_13mc,
+		43	Boana_alfaroi_QCAZ44858,
+		44	Boana_tetete_QCAZ40081,
+		45	Boana_fasciata_QCAZ17030,
+		46	Boana_almendarizae_QCAZ39650,
+		47	Boana_calcarata_QCAZ44177,
+		48	Boana_maculateralis_NMP6V71250,
+		49	Boana_sibleszi_ROM39561,
+		50	Boana_icamiaba_MPEG_27246,
+		51	Boana_boans_RWM17746,
+		52	Boana_wavrini_MPEG_33741,
+		53	Boana_geographica_MPEG40274,
+		54	Boana_diabolica_R152,
+		55	Boana_pombali_2034,
+		56	Boana_gracilis_MAD085,
+		57	Boana_punctata_MACN37792,
+		58	Boana_lemai_ROM39570,
+		59	Boana_tepuiana_USNM302435,
+		60	Boana_roraima_ROM39624,
+		61	Bokermannohyla_circumdata_CFBH3621,
+		62	Bokermannohyla_hylax_USNM303036,
+		63	Bokermannohyla_itapoty_CFBH5652,
+		64	Bokermannohyla_oxente_CFBH5642,
+		65	Hyloscirtus_phyllognathus_QCAZ41032,
+		66	Hyloscirtus_colymba_SIUCH7079,
+		67	Hyloscirtus_alytolylax_QCAZ24377,
+		68	Hyloscirtus_mashpi_MZUTI610,
+		69	Hyloscirtus_simmonsi_KU181167,
+		70	Hyloscirtus_japreria_MHNLS19234,
+		71	Hyloscirtus_platydactylus_voucher_MHNLS20326,
+		72	Hyloscirtus_palmeri_SIUCH6924,
+		73	Hyloscirtus_armatus_AMNHA165163,
+		74	Hyloscirtus_tapichalaca_QCAZ16704,
+		75	Hyloscirtus_larinopygion_QCAZ41826,
+		76	Hyloscirtus_psarolaimus_QCAZ27049,
+		77	Hyloscirtus_criptico_QCAZ45466,
+		78	Hyloscirtus_pacha_KU202760,
+		79	Hyloscirtus_staufferorum_QCAZ45967,
+		80	Hyloscirtus_pantostictus_QCAZ45438,
+		81	Nesorohyla_kanaima_ROM39582,
+		82	Myersiohyla_neblinaria_USNM562071,
+		83	Myersiohyla_chamaeleo_USNM562057
+	;
+	TREE * UNTITLED = [&R] ((((((1:84,(2:89,3:109):38):67,((4:125,5:75):48,(6:41,(7:124,8:97):14):47):121):68,((((((9:61,(10:181,(((11:15,(12:7,13:7):8):9,(14:19,15:25):7):28,(((16:181,(17:163,(18:68,(19:78,20:112):36):44):18):21,(21:76,22:135):30):47,(((23:75,24:70):43,(25:38,26:27):29):34,27:167):30):19):35):12):14,(28:231,((29:32,(30:22,31:11):7):13,(32:143,(33:103,(34:19,35:12):8):45):69):50):43):41,(36:251,(37:32,38:36):122):49):24,(39:199,((40:74,41:100):27,((42:43,(43:26,44:27):26):9,((45:23,(46:20,47:29):6):15,48:42):13):33):32):108):37,(49:256,(((50:13,(51:84,(52:16,(53:8,54:18):8):5):12):5,55:27):36,(56:105,57:135):133):51):36):21,((58:115,59:128):59,60:255):35):37):37,((61:24,62:31):149,(63:160,64:259):48):112):66,(((65:134,(66:174,(67:20,(68:5,69:9):2):56):49):23,((70:29,71:34):22,72:162):12):80,(73:249,(74:119,((75:42,(76:39,(77:27,(78:17,79:15):20):11):34):13,80:41):56):31):56):43):50,(81:332,(82:271,83:230):79):49);
+END;
