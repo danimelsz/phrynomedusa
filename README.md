@@ -1,30 +1,16 @@
-# Cophomantini
+# Phrynomedusa
 
- R code for phylogenetic comparative methods and data for acoustic and ecological traits of *Body size, habitat, and sexual dimorphism affect the evolution of advertisement calls in Cophomantini (Anura: Hylidae: Hylinae)*
+ R code for hDNA in silico analysis of *Phrynomedusa*.
  
 **Authors**
 
-Daniel Y. M. Nakamura, Paulo D. P. Pinheiro, Moisés D. E. Sulbarán
+Daniel Y. M. Nakamura, Mariana L. Lyra, Taran Grant
 
 **About files**
 
-*Phylogenetic trees*
+*Bash code*
 
-- cophomantini.parsimony.tree.nex: Parsimony tree obtained from Lyra et al. (2020)
-
-- RAxML_Lyraetal_INPRESS.tre: maximum likelihood tree obtained from Lyra et al. (2020)
-
-*Traits datasets*
-
-- S3.csv: dataset including habitat, dominant frequency, male SVL, female SVL, and sexual size dimorphism for 118 species of Cophomantini included in the employed phylogenies. This dataset was used in the phylogenetic comparative analyses. 
-
-- S4.csv: dataset including habitat, dominant frequency, male SVL, female SVL, and sexual size dimorphism for 187 species of Cophomantini. Some species are not included in the employed phylogenies, but we collected their data in order to perform non-phyllogenetic statistical models as additional analyses. 
-
-*R code*
-
-- R_code_cophomantini.txt: complete R code performed throughout phylogenetic comparative analyses 
+- preprocessing_hDNA_pvanzolini.ipynb: complete R code performed throughout hDNA preprocessing 
 
 
 **References**
-
-Lyra ML, Lourenço ACC, Pinheiro PD, Pezzuti TL, Baêta D, Barlow A, Hofreiter M, Pombal JP, Haddad CFB, Faivovich J. 2020. High-throughput DNA sequencing of museum specimens sheds light on the long-missing species of the *Bokermannohyla claresignata* group (Anura: Hylidae: Cophomantini). *Zoological Journal of the Linnean Society* 190(4): 1235–1255.
